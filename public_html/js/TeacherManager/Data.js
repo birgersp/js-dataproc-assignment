@@ -1,0 +1,4 @@
+
+TeacherManager.Data = function() {
+
+};

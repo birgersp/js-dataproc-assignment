@@ -4,21 +4,22 @@ if (!TeacherManager)
 
 // Global web application variable
 window.webapp = {
+    ui: new TeacherManager.UserInterface(),
     data: new TeacherManager.Data()
 };
 
-webapp.displayError = function (error) {
+webapp.displayError = function(error) {
 
     // TODO: display errors here (somehow), currently just throwing which prints stack trace to console
     throw error;
 };
 
-webapp.runApplication = function () {
+webapp.runApplication = function() {
 
-    console.log(webapp.data.x);
+    webapp.ui.initialize();
 };
 
-webapp.start = function () {
+webapp.start = function() {
 
     try {
         webapp.runApplication();
