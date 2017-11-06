@@ -2,9 +2,8 @@
 
 include("TeacherManager/App.js");
 
-
-
 function main() {
 
-    new TeacherManager.App();
+    let app = new TeacherManager.App();
+    app.start();
 }
