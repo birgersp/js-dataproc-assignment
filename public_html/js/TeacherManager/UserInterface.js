@@ -5,10 +5,23 @@ TeacherManager.UserInterface = function () {
 
     const APP_TITLE = "Teacher Manager";
 
+    const WORKLOAD_TAB_ID = "workload";
+    const WORKLOAD_TAB_LABEL = "Teacher Workload";
+
+    const TEACHERS_TAB_ID = "teachers";
+    const TEACHERS_TAB_LABEL = "Teachers";
+
+    const COURSES_TAB_ID = "courses";
+    const COURSES_TAB_LABEL = "Courses";
+
+    const INFO_TAB_ID = "info";
+    const INFO_TAB_LABEL = "Info";
+
     let initialized = false;
     let noOfTabs = 0;
 
     let navBarList = null;
+    let navBarContentContainer = null;
 
     function element(type, parent) {
 
@@ -25,16 +38,27 @@ TeacherManager.UserInterface = function () {
         bootstrapCSS.setAttribute("href", "css/bootstrap.min.css");
     }
 
-    function createTab(label) {
+    function createTab(id, label) {
 
-        noOfTabs;
         let listItem = element("li", navBarList);
         if (noOfTabs === 0)
             listItem.classList.add("active");
 
         let listItemLink = element("a", listItem);
-        listItemLink.setAttribute("href", "#");
+        listItemLink.setAttribute("id", id);
+        listItemLink.setAttribute("href", "#" + id + "-container");
+        listItemLink.setAttribute("data-toggle", "tab");
         listItemLink.innerHTML = label;
+
+        let tabContainer = element("div", navBarContentContainer);
+        tabContainer.setAttribute("id", id + "-container");
+        tabContainer.setAttribute("class", "tab-pane");
+
+        if (noOfTabs === 0)
+            tabContainer.classList.add("active");
+
+        let content = element("p", tabContainer);
+        content.innerHTML = "Hei hei " + id;
 
         noOfTabs++;
     }
@@ -70,10 +94,13 @@ TeacherManager.UserInterface = function () {
         navBarList = element("ul", navBarButtonsDiv);
         navBarList.setAttribute("class", "nav navbar-nav");
 
-        createTab("Teacher Workload");
-        createTab("Teachers");
-        createTab("Courses");
-        createTab("Info (0)");
+        navBarContentContainer = element("div", container);
+        navBarContentContainer.setAttribute("class", "tab-content");
+
+        createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
+        createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
+        createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
+        createTab(INFO_TAB_ID, INFO_TAB_LABEL);
 
         initialized = true;
     };
