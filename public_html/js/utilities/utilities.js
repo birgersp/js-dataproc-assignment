@@ -68,3 +68,15 @@ function parseCSVString(string, newlineCharacter, newElementCharacter) {
     return samples;
 }
 
+/**
+ * Returns true if the object has any attributes with a NULL value
+ * @param {Object} object
+ * @returns {Boolean}
+ */
+function hasNullAttributes(object) {
+    for (let key in object) {
+        if (object[key] == null)
+            return true;
+    }
+    return false;
+}

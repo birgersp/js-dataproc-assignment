@@ -26,14 +26,6 @@ TeacherManager.Course = function () {
 
     // Allocated teacher hours
     this.teacherWorkloadHours = null;
-
-    this.isValid = function () {
-        for (let key in this) {
-            if (this[key] == null)
-                return false;
-        }
-        return true;
-    };
 };
 
 TeacherManager.Course.Season = {

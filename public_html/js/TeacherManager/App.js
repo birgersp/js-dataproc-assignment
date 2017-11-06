@@ -5,6 +5,7 @@ include("WorkloadBrowser.js");
 include("../utilities/utilities.js");
 
 include("Course.js");
+include("Teacher.js");
 
 if (!window.TeacherManager)
     window.TeacherManager = {};
@@ -16,10 +17,13 @@ TeacherManager.App = function () {
 
     function processData(samples) {
 
-        console.log(samples[0]);
+        console.log(JSON.stringify(samples[0], null, 2));
 
         // Courses (indexed by ID)
         let courses = {};
+
+        // Teachers (indexed by ID)
+        let teachers = {};
 
         for (let sampleI in samples) {
 
@@ -27,9 +31,10 @@ TeacherManager.App = function () {
 
             // If course ID is unique and sample is valid, add course
             let courseID = sample["course_id"];
-            if (courses[courseID] == undefined)
-            {
+            if (courses[courseID] == undefined) {
+
                 let course = new TeacherManager.Course();
+
                 course.id = sample["course_id"];
                 course.name = sample["course_name"];
                 course.credits = Number(sample["course_credits"]);
@@ -38,13 +43,33 @@ TeacherManager.App = function () {
                 course.season = sample["spring_fall"] === "S" ? TeacherManager.Course.Season.SPRING : TeacherManager.Course.Season.FALL;
                 course.numberOfStudents = Number(sample["num_students"]);
                 course.teacherWorkloadHours = Number(sample["teacher_workload_hours"]);
-                if (course.isValid())
+
+                if (!hasNullAttributes(course))
                     courses[courseID] = course;
-                else
-                    console.log("Rejected course entry: " + sample);
+                else {
+                    console.log("Rejected course entry:");
+                    console.log(sample);
+                }
             }
 
             // If teacher ID is unique and sample is valid, add teacher
+            let teacherID = sample["teacher_id"];
+            if (teachers[teacherID] == undefined) {
+
+                let teacher = new TeacherManager.Teacher();
+
+                teacher.id = sample["teacher_id"];
+                teacher.firstName = sample["teacher_firstname"];
+                teacher.lastName = sample["teacher_lastname"];
+                teacher.facultyCode = sample["teacher_faculty"];
+
+                if (!hasNullAttributes(teacher))
+                    teachers[teacherID] = teacher;
+                else {
+                    console.log("Rejected teacher entry:");
+                    console.log(sample);
+                }
+            }
         }
     }
 
