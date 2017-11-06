@@ -7,4 +7,8 @@ TeacherManager.Teacher = function () {
     this.firstName = null;
     this.lastName = null;
     this.facultyCode = null;
+    this.departmentCode = null;
+    this.isExternal = null;
+    this.employmentPercentage = null;
+    this.isStudentAssistant = null;
 };

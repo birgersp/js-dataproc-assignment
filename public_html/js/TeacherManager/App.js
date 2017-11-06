@@ -10,7 +10,7 @@ include("Teacher.js");
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.App = function () {
+TeacherManager.App = function() {
 
     this.ui = new TeacherManager.UserInterface();
     this.workloadBrowser = new TeacherManager.WorkloadBrowser();
@@ -61,7 +61,16 @@ TeacherManager.App = function () {
                 teacher.id = sample["teacher_id"];
                 teacher.firstName = sample["teacher_firstname"];
                 teacher.lastName = sample["teacher_lastname"];
-                teacher.facultyCode = sample["teacher_faculty"];
+                teacher.isExternal = sample["is_external"];
+                if (teacher.isExternal) {
+                    teacher.facultyCode = "";
+                    teacher.departmentCode = "";
+                } else {
+                    teacher.facultyCode = sample["teacher_faculty"];
+                    teacher.departmentCode = sample["department_code"];
+                }
+                teacher.employmentPercentage = Number(sample["percent_employed"]);
+                teacher.isStudentAssistant = sample["is_studass"];
 
                 if (!hasNullAttributes(teacher))
                     teachers[teacherID] = teacher;
@@ -73,13 +82,13 @@ TeacherManager.App = function () {
         }
     }
 
-    this.handleEvent = function (event) {
+    this.handleEvent = function(event) {
 
     };
 
-    this.start = function () {
+    this.start = function() {
 
-        requestURL("data/courses.csv", function (csvString) {
+        requestURL("data/courses.csv", function(csvString) {
             let samples = parseCSVString(csvString, "\r", ";");
             processData(samples);
         });
