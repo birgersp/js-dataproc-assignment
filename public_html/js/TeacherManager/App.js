@@ -4,6 +4,7 @@ include("UserInterface.js");
 include("WorkloadBrowser.js");
 include("../utilities/utilities.js");
 
+include("StudyProgram.js");
 include("Course.js");
 include("Teacher.js");
 
@@ -19,6 +20,9 @@ TeacherManager.App = function() {
 
         console.log(JSON.stringify(samples[0], null, 2));
 
+        // Study programmes (indexed by ID);
+        let studyPrograms = {};
+
         // Courses (indexed by ID)
         let courses = {};
 
@@ -29,13 +33,31 @@ TeacherManager.App = function() {
 
             let sample = samples[sampleI];
 
+            // If program ID is unique and sample is valid, add study program
+            let studyProgramID = sample["program_id"];
+            if (studyPrograms[studyProgramID]) {
+
+                let studyProgram = new TeacherManager.StudyProgram();
+
+                studyProgram.id = studyProgramID;
+                studyProgram.name = sample["program_name"];
+                studyProgram.level = sample["study_level"];
+
+                if (!hasNullAttributes(studyProgram))
+                    studyPrograms[courseID] = studyProgram;
+                else {
+                    console.log("Rejected study program entry:");
+                    console.log(sample);
+                }
+            }
+
             // If course ID is unique and sample is valid, add course
             let courseID = sample["course_id"];
             if (courses[courseID] == undefined) {
 
                 let course = new TeacherManager.Course();
 
-                course.id = sample["course_id"];
+                course.id = courseID;
                 course.name = sample["course_name"];
                 course.credits = Number(sample["course_credits"]);
                 course.studyYear = Number(sample["study_year"]);
@@ -58,7 +80,7 @@ TeacherManager.App = function() {
 
                 let teacher = new TeacherManager.Teacher();
 
-                teacher.id = sample["teacher_id"];
+                teacher.id = teacherID;
                 teacher.firstName = sample["teacher_firstname"];
                 teacher.lastName = sample["teacher_lastname"];
                 teacher.isExternal = sample["is_external"];
