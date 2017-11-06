@@ -3,51 +3,40 @@ include("../thirdparty/bootstrap.min.js");
 
 TeacherManager.UserInterface = function () {
 
-    // Element which contains the user interface
-    let container = null;
-
-    // List element which contains the tab links (buttons)
-    let tabListElement = null;
-
-    // Element which contains the tab content divs
-    let tabDivsContainer = null;
+    const APP_TITLE = "Teacher Manager";
 
     let initialized = false;
     let noOfTabs = 0;
 
+    let navBarList = null;
+
+    function element(type, parent) {
+
+        let result = document.createElement(type);
+        if (parent)
+            parent.appendChild(result);
+        return result;
+    }
+
     function loadBootstrapCSS() {
 
-        let bootstrapCSS = document.createElement("link");
+        let bootstrapCSS = element("link", document.head);
         bootstrapCSS.setAttribute("rel", "stylesheet");
         bootstrapCSS.setAttribute("href", "css/bootstrap.min.css");
-        document.head.appendChild(bootstrapCSS);
     }
 
     function createTab(label) {
 
-        noOfTabs++;
-        let id = "tab" + noOfTabs;
-
-        let listItem = document.createElement("li");
-        tabListElement.appendChild(listItem);
-        if (noOfTabs === 1)
+        noOfTabs;
+        let listItem = element("li", navBarList);
+        if (noOfTabs === 0)
             listItem.classList.add("active");
 
-        let link = document.createElement("a");
-        link.setAttribute("href", "#" + id);
-        link.setAttribute("data-toggle", "tab");
-        link.innerHTML = label;
-        listItem.appendChild(link);
+        let listItemLink = element("a", listItem);
+        listItemLink.setAttribute("href", "#");
+        listItemLink.innerHTML = label;
 
-        let tabContentDiv = document.createElement("div");
-        tabContentDiv.setAttribute("id", id);
-        tabContentDiv.classList.add("tab-pane");
-
-        if (noOfTabs === 1)
-            tabContentDiv.classList.add("active");
-
-        tabDivsContainer.appendChild(tabContentDiv);
-        return tabContentDiv;
+        noOfTabs++;
     }
 
     this.initialize = function () {
@@ -59,22 +48,32 @@ TeacherManager.UserInterface = function () {
 
         document.body.innerHTML = "";
 
-        container = document.body;
+        let container = document.body;
 
-        tabListElement = document.createElement("ul");
-        tabListElement.classList.add("nav");
-        tabListElement.classList.add("nav-tabs");
-        container.appendChild(tabListElement);
+        let navBarElement = element("nav", container);
+        navBarElement.setAttribute("class", "navbar navbar-default navbar-static-top");
 
-        tabDivsContainer = document.createElement("div");
-        tabDivsContainer.classList.add("tab-content");
-        container.appendChild(tabDivsContainer);
+        let navBarContainerDiv = element("div", navBarElement);
+        navBarContainerDiv.setAttribute("class", "container");
 
-        let teachersDiv = createTab("Teacher Workload");
-        teachersDiv.innerHTML = "<h4>Teacher Workload</h4>";
+        let navBarHeaderDiv = element("div", navBarContainerDiv);
+        navBarHeaderDiv.setAttribute("class", "navbar-header");
 
-        let coursesDiv = createTab("Courses");
-        coursesDiv.innerHTML = "<h4>Courses</h4>";
+        let navBarBrandLink = element("a", navBarHeaderDiv);
+        navBarBrandLink.setAttribute("class", "navbar-brand");
+        navBarBrandLink.setAttribute("href", "#");
+        navBarBrandLink.innerHTML = APP_TITLE;
+
+        let navBarButtonsDiv = element("div", navBarContainerDiv);
+        navBarButtonsDiv.setAttribute("class", "navbar-collapse collapse");
+
+        navBarList = element("ul", navBarButtonsDiv);
+        navBarList.setAttribute("class", "nav navbar-nav");
+
+        createTab("Teacher Workload");
+        createTab("Teachers");
+        createTab("Courses");
+        createTab("Info (0)");
 
         initialized = true;
     };
