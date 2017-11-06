@@ -1,23 +1,14 @@
-
 "use strict";
 
 // Libraries
 include("thirdparty/jquery-3.2.1.min.js");
 include("thirdparty/bootstrap.min.js");
 
-function runApplication() {
-    throw "Something went wrong!";
-}
+include("TeacherManager/core.js");
+include("TeacherManager/data.js");
 
-function displayError(error) {
-//    alert(error);
-    throw error;
-}
+include("webapp.js");
 
 function main() {
-    try {
-        runApplication();
-    } catch (error) {
-        displayError(error);
-    }
+    webapp.start();
 }

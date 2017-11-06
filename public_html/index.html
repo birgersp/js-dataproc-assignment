@@ -5,8 +5,16 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="js/include.js" data-main="js/main.js"></script>
+        <script>
+            window.addEventListener("load", () => {
+                window.setTimeout(() => {
+                    if (!window.TeacherManager)
+                        document.body.innerHTML = "<h4>Web application failed to load. Please consider installing a <a href=\"https://www.google.com/chrome/browser/desktop/index.html\">modern browser</a></h4>";
+                }, 1000);
+            });
+        </script>
     </head>
     <body>
-        <h4>Web application failed to load. Please consider installing a <a href="https://www.google.com/chrome/browser/desktop/index.html">modern browser</a></h4>
+        <h4>Loading web application ...</h4>
     </body>
 </html>
