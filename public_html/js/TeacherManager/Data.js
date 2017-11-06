@@ -1,4 +1,7 @@
 
-TeacherManager.Data = function() {
+if (!window.TeacherManager)
+    window.TeacherManager = {};
+
+TeacherManager.Data = function () {
 
 };

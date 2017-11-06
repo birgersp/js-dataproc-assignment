@@ -1,11 +1,10 @@
 "use strict";
 
-include("TeacherManager/core.js");
-include("TeacherManager/UserInterface.js");
-include("TeacherManager/Data.js");
+include("TeacherManager/App.js");
 
-include("webapp.js");
+
 
 function main() {
-    webapp.start();
+
+    new TeacherManager.App();
 }

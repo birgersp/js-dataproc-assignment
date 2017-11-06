@@ -1,6 +1,9 @@
 include("../thirdparty/jquery-3.2.1.min.js");
 include("../thirdparty/bootstrap.min.js");
 
+if (!window.TeacherManager)
+    window.TeacherManager = {};
+
 TeacherManager.UserInterface = function () {
 
     const APP_TITLE = "Teacher Manager";
@@ -19,7 +22,6 @@ TeacherManager.UserInterface = function () {
 
     let initialized = false;
     let noOfTabs = 0;
-
     let navBarList = null;
     let navBarContentContainer = null;
 
@@ -82,7 +84,7 @@ TeacherManager.UserInterface = function () {
 
         let container = document.body;
 
-        let navBarElement = element("nav", container, {"class": "navbar navbar-default navbar-static-top"});
+        let navBarElement = element("nav", container, {"class": "navbar navbar-default"});
         let navBarContainerDiv = element("div", navBarElement, {"class": "container"});
         let navBarHeaderDiv = element("div", navBarContainerDiv, {"class": "navbar-header"});
         let navBarButton = element("button", navBarHeaderDiv,
