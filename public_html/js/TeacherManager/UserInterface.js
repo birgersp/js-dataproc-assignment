@@ -23,11 +23,20 @@ TeacherManager.UserInterface = function () {
     let navBarList = null;
     let navBarContentContainer = null;
 
-    function element(type, parent) {
+    function element(type, parent, attributes) {
 
         let result = document.createElement(type);
         if (parent)
             parent.appendChild(result);
+
+        if (attributes)
+            for (let key in attributes) {
+                if (key === "innerHTML")
+                    result[key] = attributes[key];
+                else
+                    result.setAttribute(key, attributes[key]);
+            }
+
         return result;
     }
 
@@ -69,33 +78,41 @@ TeacherManager.UserInterface = function () {
             throw "Already initialized";
 
         loadBootstrapCSS();
-
         document.body.innerHTML = "";
 
         let container = document.body;
 
-        let navBarElement = element("nav", container);
-        navBarElement.setAttribute("class", "navbar navbar-default navbar-static-top");
+        let navBarElement = element("nav", container, {"class": "navbar navbar-default navbar-static-top"});
+        let navBarContainerDiv = element("div", navBarElement, {"class": "container"});
+        let navBarHeaderDiv = element("div", navBarContainerDiv, {"class": "navbar-header"});
+        let navBarButton = element("button", navBarHeaderDiv,
+                {
+                    "class": "navbar-toggle collapsed",
+                    "type": "button",
+                    "data-toggle": "collapse",
+                    "data-target": "#navbar",
+                    "aria-expanded": "false",
+                    "aria-controls": "navbar"
+                });
+        element("span", navBarButton, {"class": "icon-bar"});
+        element("span", navBarButton, {"class": "icon-bar"});
+        element("span", navBarButton, {"class": "icon-bar"});
 
-        let navBarContainerDiv = element("div", navBarElement);
-        navBarContainerDiv.setAttribute("class", "container");
+        element("a", navBarHeaderDiv,
+                {
+                    href: "#",
+                    "class": "navbar-brand",
+                    innerHTML: APP_TITLE
+                });
 
-        let navBarHeaderDiv = element("div", navBarContainerDiv);
-        navBarHeaderDiv.setAttribute("class", "navbar-header");
+        let navBarButtonsDiv = element("div", navBarContainerDiv,
+                {
+                    id: "navbar",
+                    "class": "navbar-collapse collapse"
+                });
 
-        let navBarBrandLink = element("a", navBarHeaderDiv);
-        navBarBrandLink.setAttribute("class", "navbar-brand");
-        navBarBrandLink.setAttribute("href", "#");
-        navBarBrandLink.innerHTML = APP_TITLE;
-
-        let navBarButtonsDiv = element("div", navBarContainerDiv);
-        navBarButtonsDiv.setAttribute("class", "navbar-collapse collapse");
-
-        navBarList = element("ul", navBarButtonsDiv);
-        navBarList.setAttribute("class", "nav navbar-nav");
-
-        navBarContentContainer = element("div", container);
-        navBarContentContainer.setAttribute("class", "tab-content");
+        navBarList = element("ul", navBarButtonsDiv, {"class": "nav navbar-nav"});
+        navBarContentContainer = element("div", container, {"class": "tab-content"});
 
         createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
         createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
