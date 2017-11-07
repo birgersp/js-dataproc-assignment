@@ -57,7 +57,9 @@ TeacherManager.App = function() {
         tabs.workload = self.ui.createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
         tabs.teachers = self.ui.createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
 
-        tabs.teachers.open();
+        tabs.teachers.onOpen = function() {
+            self.teacherBrowser.resetView();
+        };
 
         self.workloadBrowser.container = tabs.workload.container;
         self.teacherBrowser.container = tabs.teachers.container;
@@ -68,5 +70,7 @@ TeacherManager.App = function() {
         self.teacherBrowser.initialize();
 
         self.dataProcessor.process("data/courses.csv", dataProcessed);
+
+        tabs.teachers.open();
     };
 };

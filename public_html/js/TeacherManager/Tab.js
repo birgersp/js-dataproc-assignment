@@ -10,7 +10,7 @@ TeacherManager.Tab = function() {
     this.tabLink = null;
 
     this.open = function() {
-        this.tabLink.click();
+        tab.tabLink.click();
         tab.onOpen();
     };
 

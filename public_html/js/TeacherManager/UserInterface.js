@@ -105,6 +105,7 @@ TeacherManager.UserInterface = function() {
         tab.container = tabContainer;
         tab.id = id;
         tab.tabLink = listItemLink;
+        tab.tabLink.addEventListener("click", tab.open);
         return tab;
     };
 };
