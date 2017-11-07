@@ -1,7 +1,7 @@
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.Teacher = function () {
+TeacherManager.Teacher = function() {
 
     this.id = null;
     this.firstName = null;

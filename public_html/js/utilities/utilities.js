@@ -7,7 +7,7 @@
 function requestURL(url, callback)
 {
     let request = new XMLHttpRequest();
-    request.onreadystatechange = function () {
+    request.onreadystatechange = function() {
         if (request.readyState == 4 && request.status == 200)
             callback(request.responseText);
     };
@@ -66,30 +66,4 @@ function parseCSVString(string, newlineCharacter, newElementCharacter) {
         }
     }
     return samples;
-}
-
-/**
- * Returns the name (key) of each attribute that has a null value
- * @param {Object} object
- * @returns {Array}
- */
-function getNullAttributeKeys(object) {
-    let nullAttributeKeys = [];
-    for (let key in object)
-        if (object[key] == null)
-            nullAttributeKeys.push(key);
-    return nullAttributeKeys;
-}
-
-/**
- * Returns true if the object has any attributes with a NULL value
- * @param {Object} object
- * @returns {Boolean}
- */
-function hasNullAttributes(object) {
-    for (let key in object) {
-        if (object[key] == null)
-            return true;
-    }
-    return false;
 }

@@ -9,16 +9,6 @@ TeacherManager.DataProcessor = function() {
     let courses = {};
     let teachers = {};
 
-    function validateDataObject(label, object) {
-
-        let nullAttributeKeys = getNullAttributeKeys(object);
-        if (nullAttributeKeys.length == 0)
-            return true;
-
-        console.log(label + " invalid, missing attribute keys are: " + nullAttributeKeys);
-        return false;
-    }
-
     function populate(samples) {
 
         // Iterate through samples, identify unique programs, courses and teachers
@@ -27,7 +17,7 @@ TeacherManager.DataProcessor = function() {
 
             // If program ID is unique and sample is valid, add study program
             let studyProgramID = sample["program_id"];
-            if (studyPrograms[studyProgramID]) {
+            if (studyProgramID != "" && studyPrograms[studyProgramID]) {
 
                 let studyProgram = new TeacherManager.StudyProgram();
 
@@ -35,13 +25,12 @@ TeacherManager.DataProcessor = function() {
                 studyProgram.name = sample["program_name"];
                 studyProgram.level = sample["study_level"];
 
-                if (validateDataObject("Study Program", studyProgram))
-                    studyPrograms[studyProgramID] = studyProgram;
+                studyPrograms[studyProgramID] = studyProgram;
             }
 
             // If course ID is unique and sample is valid, add course
             let courseID = sample["course_id"];
-            if (courses[courseID] == undefined) {
+            if (courseID != "" && courses[courseID] == undefined) {
 
                 let course = new TeacherManager.Course();
 
@@ -54,13 +43,12 @@ TeacherManager.DataProcessor = function() {
                 course.numberOfStudents = Number(sample["num_students"]);
                 course.teacherWorkloadHours = Number(sample["teacher_workload_hours"]);
 
-                if (validateDataObject("Course", course))
-                    courses[courseID] = course;
+                courses[courseID] = course;
             }
 
             // If teacher ID is unique and sample is valid, add teacher
             let teacherID = sample["teacher_id"];
-            if (teachers[teacherID] == undefined) {
+            if (teacherID != "" && teachers[teacherID] == undefined) {
 
                 let teacher = new TeacherManager.Teacher();
 
@@ -79,26 +67,52 @@ TeacherManager.DataProcessor = function() {
                 teacher.isStudentAssistant = sample["is_studass"].toLowerCase() == "true";
                 teacher.courses = {};
 
-                if (teacherID == "") {
-                    console.log("stop!");
-                }
-
-                if (validateDataObject("Teacher", teacher))
-                    teachers[teacherID] = teacher;
+                teachers[teacherID] = teacher;
             }
 
+            // Add course to teacher
             if (teachers[teacherID] != undefined && courses[courseID] != undefined) {
                 let teacher = teachers[teacherID];
                 let course = courses[courseID];
                 teacher.courses[courseID] = course;
             }
         }
+    }
 
-        console.log(teachers);
+    function addTeacherWorkload(samples) {
+
+        // Iterate through samples, identify unique programs, courses and teachers
+        for (let sampleI in samples) {
+            let sample = samples[sampleI];
+
+            let courseID = sample["course_id"];
+            if (courseID == "")
+                continue;
+
+            let course = courses[courseID];
+            if (course == undefined)
+                throw "Course " + courseID + " is missing from the register";
+
+            let teacherID = sample["teacher_id"];
+            if (teacherID == "")
+                continue;
+
+            let teacher = teachers[teacherID];
+            if (teacher == undefined)
+                throw "Teacher " + teacherID + " is missing from the register";
+
+            let sampleWorkloadPercent = Number(sample["percent_course"]);
+            if (course.season == TeacherManager.Course.Season.SPRING)
+                teacher.workloadPercent.spring += sampleWorkloadPercent;
+            else
+                teacher.workloadPercent.fall += sampleWorkloadPercent;
+        }
     }
 
     function process(samples) {
         populate(samples);
+        addTeacherWorkload(samples);
+        console.log(teachers);
     }
 
     this.process = function(filename, callback) {
