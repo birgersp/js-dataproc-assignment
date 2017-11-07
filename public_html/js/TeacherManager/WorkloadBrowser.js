@@ -71,16 +71,12 @@ TeacherManager.WorkloadBrowser = function() {
 
         function getWorkloadBorderColor(workloadPercent) {
 
-            let alpha = 1;
-            let rgbaString = 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',' + alpha + ')';
-            return rgbaString;
+            return 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',1)';
         }
 
         function getWorkloadColor(workloadPercent) {
 
-            let alpha = 0.3;
-            let rgbaString = 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',' + alpha + ')';
-            return rgbaString;
+            return 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',' + COLOR_ALPHA + ')';
         }
 
         for (let teacherID in teachers) {
