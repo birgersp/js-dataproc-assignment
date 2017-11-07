@@ -21,7 +21,7 @@ TeacherManager.App = function() {
 
     function dataProcessed() {
 
-        self.workloadBrowser.update();
+        self.workloadBrowser.setTeacherData(self.dataProcessor.getTeachers());
     }
 
     this.start = function() {

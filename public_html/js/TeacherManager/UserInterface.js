@@ -74,7 +74,7 @@ TeacherManager.UserInterface = function() {
         let container = document.body;
 
         let navBarElement = createElement("nav", container, {"class": "navbar navbar-default"});
-        let navBarContainerDiv = createElement("div", navBarElement, {"class": "container"});
+        let navBarContainerDiv = createElement("div", navBarElement);
         let navBarHeaderDiv = createElement("div", navBarContainerDiv, {"class": "navbar-header"});
         let navBarButton = createElement("button", navBarHeaderDiv,
                 {
