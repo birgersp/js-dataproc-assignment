@@ -2,6 +2,7 @@
 
 include("../utilities/utilities.js");
 include("../thirdparty/Chart.min.js");
+include("../thirdparty/colorconverter.js"); /* global colorconv */
 
 if (!window.TeacherManager)
     window.TeacherManager = {};
@@ -26,7 +27,7 @@ TeacherManager.WorkloadBrowser = function() {
         self.container.innerHTML = "";
 
         let canvasContainer = createElement("div", self.container);
-        canvasContainer.style.setProperty("max-width", "1200px");
+        canvasContainer.style.setProperty("max-width", "1600px");
 
         let canvas = createElement("canvas", canvasContainer);
 
@@ -36,18 +37,37 @@ TeacherManager.WorkloadBrowser = function() {
         let springWorkloadColors = [];
         let springWorkloadBorderColors = [];
 
+        function getWorkloadColorRGB(workloadPercent) {
+
+            let hue = 1 / 3;
+
+            let rgb = colorconv.HSV2RGB([hue, 1, 1]);
+            console.log(rgb);
+
+            let rgbString = "" + rgb;
+            return rgbString;
+        }
+
         function getWorkloadBorderColor(workloadPercent) {
-            return 'rgba(255, 206, 86, 1)';
+
+            let alpha = 1;
+            let rgbaString = 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',' + alpha + ')';
+            return rgbaString;
         }
 
         function getWorkloadColor(workloadPercent) {
-            return 'rgba(255, 206, 86, 0.5)';
+
+            let alpha = 0.3;
+            let rgbaString = 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',' + alpha + ')';
+            return rgbaString;
         }
 
         for (let teacherID in teachers) {
 
             let teacher = teachers[teacherID];
-            teacherNames.push(teacher.lastName);
+            let teacherName = teacher.lastName + ", " + teacher.firstName[0];
+
+            teacherNames.push(teacherName);
 
             let workloadPercent = teacher.workloadPercent.spring;
 
@@ -68,6 +88,13 @@ TeacherManager.WorkloadBrowser = function() {
                             }
                         }
                     }]
+            },
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: "Workload, Spring"
             }
         };
 
