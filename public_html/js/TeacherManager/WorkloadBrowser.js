@@ -15,6 +15,10 @@ TeacherManager.WorkloadBrowser = function() {
 
     let chart = null;
 
+    let teacherNames = [];
+    let springWorkloadDataValues = [];
+    let fallWorkloadDataValues = [];
+
     function onChartClick(event, array) {
 
         // TODO: appropriately handle clicks
@@ -23,34 +27,28 @@ TeacherManager.WorkloadBrowser = function() {
 
     this.initialize = function() {
 
-        self.container.innerHTML = "<input type=\"checkbox\"></input>";
+        self.container.innerHTML = "";
 
         let canvasContainer = createElement("div", self.container);
-        canvasContainer.style.setProperty("width", "1000px");
+//        canvasContainer.style.setProperty("width", "1000px");
 
         let canvas = createElement("canvas", canvasContainer);
-        let style = canvas.style;
 
         chart = new Chart(canvas, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
-                // Name of each teacher
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: teacherNames,
                 datasets: [
                     {
                         label: 'Spring',
-
-                        // Workload of each teacher during the spring
-                        data: [19, 3],
+                        data: springWorkloadDataValues,
                         backgroundColor: 'rgba(255, 206, 86, 0.2)',
                         borderColor: 'rgba(255, 206, 86, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Fall',
-
-                        // Workload of each teacher during the fall
-                        data: [12, 5],
+                        data: fallWorkloadDataValues,
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
@@ -59,7 +57,7 @@ TeacherManager.WorkloadBrowser = function() {
             options: {
                 onClick: onChartClick,
                 scales: {
-                    yAxes: [{
+                    xAxes: [{
                             ticks: {
                                 beginAtZero: true
                             }
@@ -71,8 +69,47 @@ TeacherManager.WorkloadBrowser = function() {
 
     this.update = function() {
 
-        console.log(self.teachers);
+        let springDataValues = chart.data.datasets[0].data;
+        let fallDataValues = chart.data.datasets[1].data;
+
+        for (let teacherID in self.teachers) {
+
+            let teacher = self.teachers[teacherID];
+
+            teacherNames.push(teacher.lastName + ", " + teacher.firstName);
+            springDataValues.push(teacher.workloadPercent.spring);
+            fallDataValues.push(teacher.workloadPercent.fall);
+
+            chart.update();
+
+//            chart.data.datasets[0].data.push()
+        }
 
         // TODO: generate chart(s)
+
+        // Name of each teacher
+//        newData =
+//                {
+//                    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+//                    datasets: [
+//                        {
+//                            label: 'Spring',
+//
+//                            // Workload of each teacher during the spring
+//                            data: [19, 3],
+//                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+//                            borderColor: 'rgba(255, 206, 86, 1)',
+//                            borderWidth: 1
+//                        },
+//                        {
+//                            label: 'Fall',
+//
+//                            // Workload of each teacher during the fall
+//                            data: [12, 5],
+//                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+//                            borderColor: 'rgba(54, 162, 235, 1)',
+//                            borderWidth: 1
+//                        }]
+//                };
     };
 };
