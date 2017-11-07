@@ -83,21 +83,24 @@ TeacherManager.UserInterface = function() {
         if (noOfTabs === 0)
             listItem.classList.add("active");
 
-        let listItemLink = createElement("a", listItem);
-        listItemLink.setAttribute("id", id);
-        listItemLink.setAttribute("href", "#" + id + "-container");
-        listItemLink.setAttribute("data-toggle", "tab");
-        listItemLink.innerHTML = label;
+        let listItemLink = createElement("a", listItem, {
+            id: id,
+            href: "#" + id + "-container",
+            "data-toggle": "tab",
+            innerHTML: label
+        });
 
-        let tabContainer = createElement("div", navBarContentContainer);
-        tabContainer.setAttribute("id", id + "-container");
-        tabContainer.setAttribute("class", "tab-pane");
+        let tabContainer = createElement("div", navBarContentContainer, {
+            id: id + "-container",
+            "class": "tab-pane"
+        });
 
         if (noOfTabs === 0)
             tabContainer.classList.add("active");
 
-        let content = createElement("p", tabContainer);
-        content.innerHTML = "<h4>Loading ...</h4>";
+        createElement("h4", tabContainer, {
+            innerHTML: "Loading ..."
+        });
 
         noOfTabs++;
 
