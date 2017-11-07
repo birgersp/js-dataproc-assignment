@@ -17,6 +17,7 @@ TeacherManager.TeacherBrowser = function() {
 
     let teacherOverviewDiv = null;
     let teacherDetailedView = null;
+    let teachers = {};
 
     this.container = null;
 
@@ -33,7 +34,7 @@ TeacherManager.TeacherBrowser = function() {
         teacherDetailedView.appendChild(warningHeader);
     };
 
-    this.setTeacherData = function(teachers) {
+    this.setTeacherData = function(newTeachers) {
 
         teacherOverviewDiv.innerHTML = "";
 
@@ -48,21 +49,37 @@ TeacherManager.TeacherBrowser = function() {
 
         let tableBody = createElement("tbody", table);
 
-        for (let teacherID in teachers) {
-            let teacher = teachers[teacherID];
+        for (let teacherID in newTeachers) {
+            let teacher = newTeachers[teacherID];
             let tableBodyRow = createElement("tr", tableBody);
             tableBodyRow.addEventListener("click", () => {
                 self.openTeacher(teacherID);
             });
             for (let key in attributeKeys)
                 createElement("td", tableBodyRow, {innerHTML: teacher[key]});
+
+            teachers[teacherID] = newTeachers[teacherID];
         }
     };
 
     this.openTeacher = function(id) {
+
+        teacherDetailedView.innerHTML = "";
+        let table = createElement("table", teacherDetailedView, {
+            "class": "table table-striped table-hover"
+        });
+
+        let tableBody = createElement("tbody", table);
+
+        let teacher = teachers[id];
+        for (let key in attributeKeys) {
+            let tableBodyRow = createElement("tr", tableBody);
+            createElement("td", tableBodyRow, {innerHTML: attributeKeys[key]});
+            createElement("td", tableBodyRow, {innerHTML: teacher[key]});
+        }
+
         teacherOverviewDiv.style.setProperty("display", "none");
         teacherDetailedView.style.setProperty("display", "block");
-        console.log(id);
     };
 
     this.resetView = function() {
