@@ -79,25 +79,42 @@ TeacherManager.WorkloadBrowser = function() {
             return 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',' + COLOR_ALPHA + ')';
         }
 
+        function insertAt(array, index, item) {
+            array.splice(index, 0, item);
+        }
+
         for (let teacherID in teachers) {
 
             let teacher = teachers[teacherID];
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
 
-            teacherNames.push(teacherName);
-
             let springWorkload = teacher.workloadPercent.spring;
-
-            springWorkloadColors.push(getWorkloadColor(springWorkload));
-            springWorkloadBorderColors.push(getWorkloadBorderColor(springWorkload));
-            springWorkloadDataValues.push(springWorkload);
-
             let fallWorkload = teacher.workloadPercent.fall;
 
-            fallWorkloadColors.push(getWorkloadColor(fallWorkload));
-            fallWorkloadBorderColors.push(getWorkloadBorderColor(fallWorkload));
-            fallWorkloadDataValues.push(fallWorkload);
+            // Determine index according to first letter in name (sorting alphabetically)
+            let teacherNameCharCode = teacherName.charCodeAt(0);
+            let found = false;
+            let index = 0;
+            while (!found) {
+                if (index >= teacherNames.length) {
+                    index = teacherNames.length;
+                    found = true;
+                } else {
+                    if (teacherNames[index].charCodeAt(0) > teacherNameCharCode)
+                        found = true;
+                    else
+                        index++;
+                }
+            }
 
+            // Insert data to chart datasets at index
+            insertAt(teacherNames, index, teacherName);
+            insertAt(springWorkloadColors, index, getWorkloadColor(springWorkload));
+            insertAt(springWorkloadBorderColors, index, getWorkloadBorderColor(springWorkload));
+            insertAt(springWorkloadDataValues, index, springWorkload);
+            insertAt(fallWorkloadColors, index, getWorkloadColor(fallWorkload));
+            insertAt(fallWorkloadBorderColors, index, getWorkloadBorderColor(fallWorkload));
+            insertAt(fallWorkloadDataValues, index, fallWorkload);
         }
 
         function createChart(canvas, title, dataValues, dataColors, dataBorderColors) {
