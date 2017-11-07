@@ -13,9 +13,16 @@ TeacherManager.WorkloadBrowser = function() {
     const MAX_WORKLOAD_THRESHOLD = 250;
     let self = this;
 
+    let sortedTeachers = [];
+
     this.container = null;
+    this.onTeacherSelected = function(teacher) {};
 
     function onChartClick(event, array) {
+        if (array[0]) {
+            let teacher = sortedTeachers[array[0]._index];
+            self.onTeacherSelected(teacher);
+        }
     }
 
     this.initialize = function() {
@@ -108,6 +115,7 @@ TeacherManager.WorkloadBrowser = function() {
             }
 
             // Insert data to chart datasets at index
+            insertAt(sortedTeachers, index, teacher);
             insertAt(teacherNames, index, teacherName);
             insertAt(springWorkloadColors, index, getWorkloadColor(springWorkload));
             insertAt(springWorkloadBorderColors, index, getWorkloadBorderColor(springWorkload));

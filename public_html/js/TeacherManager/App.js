@@ -49,6 +49,11 @@ TeacherManager.App = function() {
         self.teacherBrowser.setTeacherData(teachers);
     }
 
+    function teacherSelected(teacher) {
+        tabs.teachers.open();
+        self.teacherBrowser.showTeacherDetails(teacher);
+    }
+
     this.start = function() {
 
         self.ui.appTitle = APP_TITLE;
@@ -61,6 +66,8 @@ TeacherManager.App = function() {
             self.teacherBrowser.resetView();
         };
 
+        self.workloadBrowser.onTeacherSelected = teacherSelected;
+
         self.workloadBrowser.container = tabs.workload.container;
         self.teacherBrowser.container = tabs.teachers.container;
         self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
@@ -70,7 +77,5 @@ TeacherManager.App = function() {
         self.teacherBrowser.initialize();
 
         self.dataProcessor.process("data/courses.csv", dataProcessed);
-
-        tabs.teachers.open();
     };
 };

@@ -53,7 +53,7 @@ TeacherManager.TeacherBrowser = function() {
             let teacher = newTeachers[teacherID];
             let tableBodyRow = createElement("tr", tableBody);
             tableBodyRow.addEventListener("click", () => {
-                self.openTeacher(teacherID);
+                self.showTeacherDetails(teacher);
             });
             for (let key in attributeKeys)
                 createElement("td", tableBodyRow, {innerHTML: teacher[key]});
@@ -62,7 +62,7 @@ TeacherManager.TeacherBrowser = function() {
         }
     };
 
-    this.openTeacher = function(id) {
+    this.showTeacherDetails = function(teacher) {
 
         teacherDetailedView.innerHTML = "";
         let table = createElement("table", teacherDetailedView, {
@@ -71,7 +71,6 @@ TeacherManager.TeacherBrowser = function() {
 
         let tableBody = createElement("tbody", table);
 
-        let teacher = teachers[id];
         for (let key in attributeKeys) {
             let tableBodyRow = createElement("tr", tableBody);
             createElement("td", tableBodyRow, {innerHTML: attributeKeys[key]});
