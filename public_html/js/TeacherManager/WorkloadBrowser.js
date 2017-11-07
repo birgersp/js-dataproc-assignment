@@ -59,7 +59,10 @@ TeacherManager.WorkloadBrowser = function() {
                 scales: {
                     xAxes: [{
                             ticks: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                callback: function(value, index, values) {
+                                    return value + "%";
+                                }
                             }
                         }]
                 }
