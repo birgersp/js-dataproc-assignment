@@ -11,6 +11,7 @@ TeacherManager.WorkloadBrowser = function() {
 
     const COLOR_ALPHA = 0.2;
     const MAX_WORKLOAD_THRESHOLD = 250;
+
     let self = this;
 
     let sortedTeachers = [];
@@ -145,8 +146,9 @@ TeacherManager.WorkloadBrowser = function() {
                                 ticks: {
                                     beginAtZero: true,
                                     callback: function(value, index, values) {
-                                        return value + "%";
-                                    }
+                                        return value + "%" + (value == MAX_WORKLOAD_THRESHOLD ? "+" : "");
+                                    },
+                                    max: MAX_WORKLOAD_THRESHOLD
                                 }
                             }]
                     },
