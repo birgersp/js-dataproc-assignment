@@ -19,11 +19,64 @@ TeacherManager.WorkloadBrowser = function() {
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
 
-    function onChartClick(event, array) {
+    function onSeasonChartClicked(event, array) {
         if (array[0]) {
             let teacher = sortedTeachers[array[0]._index];
             self.onTeacherSelected(teacher);
         }
+    }
+
+    function createDropdown() {
+
+        let someContainer = createElement("div", self.container, {"class": "dropdown"});
+
+        let buttonDiv = createElement("div", someContainer, {
+            "class": "button-group"
+        });
+
+        let button = createElement("button", buttonDiv, {
+            type: "button",
+            "class": "btn btn-default btn-sm dropdown-toggle",
+            "data-toggle": "dropdown"
+        });
+
+        createElement("span", button, {
+            "class": "glyphicon glyphicon-cog",
+            innerHTML: " "
+        });
+
+        button.innerHTML += " ";
+
+        createElement("span", button, {
+            "class": "caret"
+        });
+
+        let dropdownList = createElement("ul", buttonDiv, {
+            "class": "dropdown-menu"
+        });
+
+        let li1 = createElement("li", dropdownList);
+        let a1 = createElement("a", li1, {
+            href: "#",
+            "class": "small"
+        });
+
+        let checkbox1 = createElement("input", a1, {
+            type: "checkbox",
+            id: "checkbox"
+        });
+
+        let check = () => {
+            let element = document.getElementById("checkbox");
+            element.checked = !element.checked;
+        };
+
+        a1.onclick = function(e) {
+            check();
+            e.stopPropagation();
+        };
+
+        a1.innerHTML += " Option 1";
     }
 
     this.initialize = function() {
@@ -34,11 +87,13 @@ TeacherManager.WorkloadBrowser = function() {
 
         self.container.innerHTML = "";
 
-        let canvasContainer = createElement("div", self.container);
-        canvasContainer.style.setProperty("max-width", "1600px");
+        createDropdown();
 
-        let springCanvas = createElement("canvas", canvasContainer);
-        let fallCanvas = createElement("canvas", canvasContainer);
+        let seasonChartsCanvasContainer = createElement("div", self.container);
+        seasonChartsCanvasContainer.style.setProperty("max-width", "1600px");
+
+        let springCanvas = createElement("canvas", seasonChartsCanvasContainer);
+        let fallCanvas = createElement("canvas", seasonChartsCanvasContainer);
 
         let teacherNames = [];
 
@@ -140,7 +195,7 @@ TeacherManager.WorkloadBrowser = function() {
                         }]
                 },
                 options: {
-                    onClick: onChartClick,
+                    onClick: onSeasonChartClicked,
                     scales: {
                         xAxes: [{
                                 ticks: {
