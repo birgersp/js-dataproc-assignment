@@ -38,7 +38,7 @@ TeacherManager.TeacherBrowser = function() {
         teacherOverviewDiv.innerHTML = "";
 
         let table = createElement("table", teacherOverviewDiv, {
-            "class": "table table-striped"
+            "class": "table table-striped table-hover"
         });
         let tableHead = createElement("thead", table);
         let headRow = createElement("tr", tableHead);
@@ -60,13 +60,13 @@ TeacherManager.TeacherBrowser = function() {
     };
 
     this.openTeacher = function(id) {
-        teacherOverviewDiv.style.setProperty("visibility", "hidden");
-        teacherDetailedView.style.setProperty("visibility", "visible");
+        teacherOverviewDiv.style.setProperty("display", "none");
+        teacherDetailedView.style.setProperty("display", "block");
         console.log(id);
     };
 
     this.resetView = function() {
-        teacherDetailedView.style.setProperty("visibility", "hidden");
-        teacherOverviewDiv.style.setProperty("visibility", "visible");
+        teacherDetailedView.style.setProperty("display", "none");
+        teacherOverviewDiv.style.setProperty("display", "block");
     };
 };
