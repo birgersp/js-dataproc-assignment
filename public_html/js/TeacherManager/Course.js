@@ -1,7 +1,9 @@
+"use strict";
+
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.Course = function () {
+TeacherManager.Course = function() {
 
     // ID
     this.id = null;

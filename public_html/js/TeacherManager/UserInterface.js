@@ -1,3 +1,5 @@
+"use strict";
+
 include("../thirdparty/jquery-3.2.1.min.js");
 include("../thirdparty/bootstrap.min.js");
 
@@ -25,53 +27,40 @@ TeacherManager.UserInterface = function() {
     let navBarList = null;
     let navBarContentContainer = null;
 
-    function element(type, parent, attributes) {
-
-        let result = document.createElement(type);
-        if (parent)
-            parent.appendChild(result);
-
-        if (attributes)
-            for (let key in attributes) {
-                if (key === "innerHTML")
-                    result[key] = attributes[key];
-                else
-                    result.setAttribute(key, attributes[key]);
-            }
-
-        return result;
-    }
+    let workloadContainer = null;
 
     function loadBootstrapCSS() {
 
-        let bootstrapCSS = element("link", document.head);
+        let bootstrapCSS = createElement("link", document.head);
         bootstrapCSS.setAttribute("rel", "stylesheet");
         bootstrapCSS.setAttribute("href", "css/bootstrap.min.css");
     }
 
     function createTab(id, label) {
 
-        let listItem = element("li", navBarList);
+        let listItem = createElement("li", navBarList);
         if (noOfTabs === 0)
             listItem.classList.add("active");
 
-        let listItemLink = element("a", listItem);
+        let listItemLink = createElement("a", listItem);
         listItemLink.setAttribute("id", id);
         listItemLink.setAttribute("href", "#" + id + "-container");
         listItemLink.setAttribute("data-toggle", "tab");
         listItemLink.innerHTML = label;
 
-        let tabContainer = element("div", navBarContentContainer);
+        let tabContainer = createElement("div", navBarContentContainer);
         tabContainer.setAttribute("id", id + "-container");
         tabContainer.setAttribute("class", "tab-pane");
 
         if (noOfTabs === 0)
             tabContainer.classList.add("active");
 
-        let content = element("p", tabContainer);
-        content.innerHTML = "<h4>(Loading ...)</h4>";
+        let content = createElement("p", tabContainer);
+        content.innerHTML = "<h4>Loading ...</h4>";
 
         noOfTabs++;
+
+        return tabContainer;
     }
 
     this.initialize = function() {
@@ -84,10 +73,10 @@ TeacherManager.UserInterface = function() {
 
         let container = document.body;
 
-        let navBarElement = element("nav", container, {"class": "navbar navbar-default"});
-        let navBarContainerDiv = element("div", navBarElement, {"class": "container"});
-        let navBarHeaderDiv = element("div", navBarContainerDiv, {"class": "navbar-header"});
-        let navBarButton = element("button", navBarHeaderDiv,
+        let navBarElement = createElement("nav", container, {"class": "navbar navbar-default"});
+        let navBarContainerDiv = createElement("div", navBarElement, {"class": "container"});
+        let navBarHeaderDiv = createElement("div", navBarContainerDiv, {"class": "navbar-header"});
+        let navBarButton = createElement("button", navBarHeaderDiv,
                 {
                     "class": "navbar-toggle collapsed",
                     "type": "button",
@@ -96,31 +85,35 @@ TeacherManager.UserInterface = function() {
                     "aria-expanded": "false",
                     "aria-controls": "navbar"
                 });
-        element("span", navBarButton, {"class": "icon-bar"});
-        element("span", navBarButton, {"class": "icon-bar"});
-        element("span", navBarButton, {"class": "icon-bar"});
+        createElement("span", navBarButton, {"class": "icon-bar"});
+        createElement("span", navBarButton, {"class": "icon-bar"});
+        createElement("span", navBarButton, {"class": "icon-bar"});
 
-        element("a", navBarHeaderDiv,
+        createElement("a", navBarHeaderDiv,
                 {
                     href: "#",
                     "class": "navbar-brand",
                     innerHTML: APP_TITLE
                 });
 
-        let navBarButtonsDiv = element("div", navBarContainerDiv,
+        let navBarButtonsDiv = createElement("div", navBarContainerDiv,
                 {
                     id: "navbar",
                     "class": "navbar-collapse collapse"
                 });
 
-        navBarList = element("ul", navBarButtonsDiv, {"class": "nav navbar-nav"});
-        navBarContentContainer = element("div", container, {"class": "tab-content"});
+        navBarList = createElement("ul", navBarButtonsDiv, {"class": "nav navbar-nav"});
+        navBarContentContainer = createElement("div", container, {"class": "tab-content"});
 
-        createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
+        workloadContainer = createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
         createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
         createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
         createTab(INFO_TAB_ID, INFO_TAB_LABEL);
 
         initialized = true;
+    };
+
+    this.getWorkloadContainer = function() {
+        return workloadContainer;
     };
 };

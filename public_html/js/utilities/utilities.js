@@ -49,7 +49,7 @@ function parseCSVString(string, newlineCharacter, newElementCharacter) {
         if (lineIndex == 0) {
             // This line contains the attribute keys for the data samples
             for (let commaIndex in commaSplit) {
-                let key = commaSplit[commaIndex]
+                let key = commaSplit[commaIndex];
                 keys.push(key);
             }
         } else {
@@ -66,4 +66,29 @@ function parseCSVString(string, newlineCharacter, newElementCharacter) {
         }
     }
     return samples;
+}
+
+/**
+ * Creates a HTML element, appends it to a parent (optional) and set its attributes (optional)
+ * @param {String} type
+ * @param {Element} parent (Optional)
+ * @param {Object} attributes (Optional)
+ * @returns {Element}
+ */
+function createElement(type, parent, attributes) {
+
+    let result = document.createElement(type);
+
+    if (parent)
+        parent.appendChild(result);
+
+    if (attributes)
+        for (let key in attributes) {
+            if (key === "innerHTML")
+                result[key] = attributes[key];
+            else
+                result.setAttribute(key, attributes[key]);
+        }
+
+    return result;
 }

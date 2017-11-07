@@ -1,3 +1,5 @@
+"use strict";
+
 include("../utilities/utilities.js");
 
 if (!window.TeacherManager)
@@ -112,7 +114,6 @@ TeacherManager.DataProcessor = function() {
     function process(samples) {
         populate(samples);
         addTeacherWorkload(samples);
-        console.log(teachers);
     }
 
     this.process = function(filename, callback) {
@@ -121,5 +122,17 @@ TeacherManager.DataProcessor = function() {
             process(samples);
             callback();
         });
+    };
+
+    this.getStudyPrograms = function() {
+        return studyPrograms;
+    };
+
+    this.getCourses = function() {
+        return courses;
+    };
+
+    this.getTeachers = function() {
+        return teachers;
     };
 };

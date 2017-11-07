@@ -13,24 +13,25 @@ if (!window.TeacherManager)
 
 TeacherManager.App = function() {
 
+    let self = this;
+
     this.ui = new TeacherManager.UserInterface();
     this.workloadBrowser = new TeacherManager.WorkloadBrowser();
     this.dataProcessor = new TeacherManager.DataProcessor();
 
     function dataProcessed() {
 
+        self.workloadBrowser.update();
     }
-
-    this.handleEvent = function(event) {
-
-    };
 
     this.start = function() {
 
-        this.workloadBrowser.eventHandler = this;
-        this.workloadBrowser.initialize();
-        this.ui.initialize();
+        self.ui.initialize();
 
-        this.dataProcessor.process("data/courses.csv", dataProcessed);
+        self.workloadBrowser.teachers = self.dataProcessor.getTeachers();
+        self.workloadBrowser.container = self.ui.getWorkloadContainer();
+        self.workloadBrowser.initialize();
+
+        self.dataProcessor.process("data/courses.csv", dataProcessed);
     };
 };
