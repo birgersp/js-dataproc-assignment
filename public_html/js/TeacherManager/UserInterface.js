@@ -3,67 +3,27 @@
 include("../thirdparty/jquery-3.2.1.min.js");
 include("../thirdparty/bootstrap.min.js");
 
+include("Tab.js");
+
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
 TeacherManager.UserInterface = function() {
 
-    const APP_TITLE = "Teacher Manager";
+    let ui = this;
 
-    const WORKLOAD_TAB_ID = "workload";
-    const WORKLOAD_TAB_LABEL = "Teacher Workload";
-
-    const TEACHERS_TAB_ID = "teachers";
-    const TEACHERS_TAB_LABEL = "Teachers";
-
-    const COURSES_TAB_ID = "courses";
-    const COURSES_TAB_LABEL = "Courses";
-
-    const INFO_TAB_ID = "info";
-    const INFO_TAB_LABEL = "Info";
-
-    const DEFAULT_ACTIVE_TAB = 1;
+    this.appTitle = "UNTITLED";
 
     let initialized = false;
     let noOfTabs = 0;
     let navBarList = null;
     let navBarContentContainer = null;
 
-    let workloadContainer = null;
-    let teacherContainer = null;
-
     function loadBootstrapCSS() {
 
         let bootstrapCSS = createElement("link", document.head);
         bootstrapCSS.setAttribute("rel", "stylesheet");
         bootstrapCSS.setAttribute("href", "css/bootstrap.min.css");
-    }
-
-    function createTab(id, label) {
-
-        let listItem = createElement("li", navBarList);
-        if (noOfTabs === DEFAULT_ACTIVE_TAB)
-            listItem.classList.add("active");
-
-        let listItemLink = createElement("a", listItem);
-        listItemLink.setAttribute("id", id);
-        listItemLink.setAttribute("href", "#" + id + "-container");
-        listItemLink.setAttribute("data-toggle", "tab");
-        listItemLink.innerHTML = label;
-
-        let tabContainer = createElement("div", navBarContentContainer);
-        tabContainer.setAttribute("id", id + "-container");
-        tabContainer.setAttribute("class", "tab-pane");
-
-        if (noOfTabs === DEFAULT_ACTIVE_TAB)
-            tabContainer.classList.add("active");
-
-        let content = createElement("p", tabContainer);
-        content.innerHTML = "<h4>Loading ...</h4>";
-
-        noOfTabs++;
-
-        return tabContainer;
     }
 
     this.initialize = function() {
@@ -96,7 +56,7 @@ TeacherManager.UserInterface = function() {
                 {
                     href: "#",
                     "class": "navbar-brand",
-                    innerHTML: APP_TITLE
+                    innerHTML: ui.appTitle
                 });
 
         let navBarButtonsDiv = createElement("div", navBarContainerDiv,
@@ -108,19 +68,43 @@ TeacherManager.UserInterface = function() {
         navBarList = createElement("ul", navBarButtonsDiv, {"class": "nav navbar-nav"});
         navBarContentContainer = createElement("div", container, {"class": "tab-content"});
 
-        workloadContainer = createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
-        teacherContainer = createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
-        createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
-        createTab(INFO_TAB_ID, INFO_TAB_LABEL);
-
         initialized = true;
     };
 
-    this.getWorkloadContainer = function() {
-        return workloadContainer;
-    };
+    /**
+     * Creates a tab in the UI, and returns its corresponding tab object
+     * @param {String} id
+     * @param {String} label
+     * @returns {TeacherManager.Tab}
+     */
+    this.createTab = function(id, label) {
 
-    this.getTeacherContainer = function() {
-        return teacherContainer;
+        let listItem = createElement("li", navBarList);
+        if (noOfTabs === 0)
+            listItem.classList.add("active");
+
+        let listItemLink = createElement("a", listItem);
+        listItemLink.setAttribute("id", id);
+        listItemLink.setAttribute("href", "#" + id + "-container");
+        listItemLink.setAttribute("data-toggle", "tab");
+        listItemLink.innerHTML = label;
+
+        let tabContainer = createElement("div", navBarContentContainer);
+        tabContainer.setAttribute("id", id + "-container");
+        tabContainer.setAttribute("class", "tab-pane");
+
+        if (noOfTabs === 0)
+            tabContainer.classList.add("active");
+
+        let content = createElement("p", tabContainer);
+        content.innerHTML = "<h4>Loading ...</h4>";
+
+        noOfTabs++;
+
+        let tab = new TeacherManager.Tab();
+        tab.container = tabContainer;
+        tab.id = id;
+        tab.tabLink = listItemLink;
+        return tab;
     };
 };
