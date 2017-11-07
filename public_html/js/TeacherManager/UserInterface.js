@@ -22,12 +22,15 @@ TeacherManager.UserInterface = function() {
     const INFO_TAB_ID = "info";
     const INFO_TAB_LABEL = "Info";
 
+    const DEFAULT_ACTIVE_TAB = 1;
+
     let initialized = false;
     let noOfTabs = 0;
     let navBarList = null;
     let navBarContentContainer = null;
 
     let workloadContainer = null;
+    let teacherContainer = null;
 
     function loadBootstrapCSS() {
 
@@ -39,7 +42,7 @@ TeacherManager.UserInterface = function() {
     function createTab(id, label) {
 
         let listItem = createElement("li", navBarList);
-        if (noOfTabs === 0)
+        if (noOfTabs === DEFAULT_ACTIVE_TAB)
             listItem.classList.add("active");
 
         let listItemLink = createElement("a", listItem);
@@ -52,7 +55,7 @@ TeacherManager.UserInterface = function() {
         tabContainer.setAttribute("id", id + "-container");
         tabContainer.setAttribute("class", "tab-pane");
 
-        if (noOfTabs === 0)
+        if (noOfTabs === DEFAULT_ACTIVE_TAB)
             tabContainer.classList.add("active");
 
         let content = createElement("p", tabContainer);
@@ -106,7 +109,7 @@ TeacherManager.UserInterface = function() {
         navBarContentContainer = createElement("div", container, {"class": "tab-content"});
 
         workloadContainer = createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
-        createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
+        teacherContainer = createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
         createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
         createTab(INFO_TAB_ID, INFO_TAB_LABEL);
 
@@ -115,5 +118,9 @@ TeacherManager.UserInterface = function() {
 
     this.getWorkloadContainer = function() {
         return workloadContainer;
+    };
+
+    this.getTeacherContainer = function() {
+        return teacherContainer;
     };
 };
