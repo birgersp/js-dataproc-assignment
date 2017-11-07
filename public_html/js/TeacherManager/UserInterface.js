@@ -4,7 +4,7 @@ include("../thirdparty/bootstrap.min.js");
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.UserInterface = function () {
+TeacherManager.UserInterface = function() {
 
     const APP_TITLE = "Teacher Manager";
 
@@ -69,12 +69,12 @@ TeacherManager.UserInterface = function () {
             tabContainer.classList.add("active");
 
         let content = element("p", tabContainer);
-        content.innerHTML = "Hei hei " + id;
+        content.innerHTML = "<h4>(Loading ...)</h4>";
 
         noOfTabs++;
     }
 
-    this.initialize = function () {
+    this.initialize = function() {
 
         if (initialized)
             throw "Already initialized";
