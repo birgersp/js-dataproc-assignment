@@ -105,7 +105,10 @@ TeacherManager.WorkloadBrowser = function() {
 
             let teacher = sortedTeachers[index];
 
-            if (!options[0] && teacher.isExternal)
+            if (teacher.isExternal && !options.showExternal)
+                continue;
+
+            if (teacher.isStudentAssistant && !options.showStudAss)
                 continue;
 
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
@@ -142,6 +145,7 @@ TeacherManager.WorkloadBrowser = function() {
         springChart.data.labels = labels;
         updateChartHeight(springChart);
         springChart.update();
+        springChart.resize();
 
         let fallDataset = fallChart.data.datasets[0];
         fallDataset.data = fallWorkloadDataValues;
@@ -151,6 +155,7 @@ TeacherManager.WorkloadBrowser = function() {
         fallChart.data.labels = labels;
         updateChartHeight(fallChart);
         fallChart.update();
+        fallChart.resize();
     }
 
     this.initialize = function() {
