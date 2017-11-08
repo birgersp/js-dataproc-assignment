@@ -18,60 +18,33 @@ TeacherManager.WorkloadBrowser = function() {
 
     let self = this;
 
+    let teachers = [];
     let sortedTeachers = [];
     let warningHeader = null;
 
     let options = null;
 
+    let combinedChart = null;
+    let springChart = null;
+    let fallChart = null;
+
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
 
     function onSeasonChartClicked(event, array) {
-        if (array[0]) {
-            let teacher = sortedTeachers[array[0]._index];
-            self.onTeacherSelected(teacher);
-        }
+
+        // TODO: determine which teacher is clicked
     }
 
     function update() {
 
-        // TODO: modify view according to options
-        console.log(self.options);
-    }
-
-    this.initialize = function() {
-
-        let dropdown = new TeacherManager.OptionsDropdown(self.container);
-        self.options = dropdown.getOptions();
-        dropdown.onChange = update;
-
-        dropdown.addOption("splitSeasons", "Split by seasons", false);
-        dropdown.addOption("showStudAss", "Show stud.ass.", true);
-        dropdown.addOption("showExternal", "Show external", true);
-
-        warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
-    };
-
-    this.setTeacherData = function(teachers) {
-
-        warningHeader.parentNode.removeChild(warningHeader);
-
-        let seasonChartsCanvasContainer = createElement("div", self.container);
-        seasonChartsCanvasContainer.style.setProperty("max-width", "1600px");
-
-        let springCanvas = createElement("canvas", seasonChartsCanvasContainer);
-        let fallCanvas = createElement("canvas", seasonChartsCanvasContainer);
-
-        let teacherNames = [];
-
+        let labels = [];
         let springWorkloadDataValues = [];
         let springWorkloadColors = [];
         let springWorkloadBorderColors = [];
-
         let fallWorkloadDataValues = [];
         let fallWorkloadColors = [];
         let fallWorkloadBorderColors = [];
-
         let maxWorkload = 0;
 
         function getWorkloadColorRGB(workload, employment) {
@@ -148,11 +121,11 @@ TeacherManager.WorkloadBrowser = function() {
             let found = false;
             let index = 0;
             while (!found) {
-                if (index >= teacherNames.length) {
-                    index = teacherNames.length;
+                if (index >= labels.length) {
+                    index = labels.length;
                     found = true;
                 } else {
-                    if (teacherNames[index].charCodeAt(0) > teacherNameCharCode)
+                    if (labels[index].charCodeAt(0) > teacherNameCharCode)
                         found = true;
                     else
                         index++;
@@ -162,7 +135,7 @@ TeacherManager.WorkloadBrowser = function() {
             // Insert data to chart datasets at index
 
             insertAt(sortedTeachers, index, teacher);
-            insertAt(teacherNames, index, teacherName);
+            insertAt(labels, index, teacherName);
 
             // Insert data (split by season)
             insertAt(springWorkloadColors, index, getWorkloadColor(springWorkload, employment));
@@ -173,12 +146,69 @@ TeacherManager.WorkloadBrowser = function() {
             insertAt(fallWorkloadDataValues, index, fallWorkload);
         }
 
-        function createChart(canvas, title, datasets, onChartClicked) {
+        let springDataset = springChart.data.datasets[0];
+        springDataset.data = springWorkloadDataValues;
+        springDataset.backgroundColor = springWorkloadColors;
+        springDataset.borderColor = springWorkloadBorderColors;
+        springDataset.borderWidth = 1;
+        springChart.data.labels = labels;
+        springChart.options.scales.xAxes[0].ticks.max = maxWorkload;
+        springChart.update();
+
+        let fallDataset = fallChart.data.datasets[0];
+        fallDataset.data = fallWorkloadDataValues;
+        fallDataset.backgroundColor = fallWorkloadColors;
+        fallDataset.borderColor = fallWorkloadBorderColors;
+        fallDataset.borderWidth = 1;
+        fallChart.data.labels = labels;
+        fallChart.options.scales.xAxes[0].ticks.max = maxWorkload;
+        fallChart.update();
+
+        // TODO: modify view according to options
+        console.log(self.options);
+    }
+
+    this.initialize = function() {
+
+        let dropdown = new TeacherManager.OptionsDropdown(self.container);
+        self.options = dropdown.getOptions();
+        dropdown.onChange = update;
+
+        dropdown.addOption("splitSeasons", "Split by seasons", false);
+        dropdown.addOption("showStudAss", "Show stud.ass.", true);
+        dropdown.addOption("showExternal", "Show external", true);
+
+        warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
+    };
+
+    this.setTeacherData = function(newTeachers) {
+
+        teachers = newTeachers;
+
+        warningHeader.parentNode.removeChild(warningHeader);
+
+        let seasonChartsCanvasContainer = createElement("div", self.container);
+        seasonChartsCanvasContainer.style.setProperty("max-width", "1600px");
+
+        let springCanvas = createElement("canvas", seasonChartsCanvasContainer);
+        let fallCanvas = createElement("canvas", seasonChartsCanvasContainer);
+
+        function createChart(canvas, title, onChartClicked, noOfDatasets) {
+
+            let datasets = [];
+            for (let i = 0; i < noOfDatasets; i++) {
+                datasets.push({
+                    data: [],
+                    labels: [],
+                    borderColor: [],
+                    backgroundColor: []
+                });
+            }
 
             let chart = new Chart(canvas, {
                 type: 'horizontalBar',
                 data: {
-                    labels: teacherNames,
+                    labels: [],
                     datasets: datasets
                 },
                 options: {
@@ -190,7 +220,7 @@ TeacherManager.WorkloadBrowser = function() {
                                     callback: function(value, index, values) {
                                         return value + "%";
                                     },
-                                    max: maxWorkload
+                                    max: 100
                                 }
                             }]
                     },
@@ -219,40 +249,11 @@ TeacherManager.WorkloadBrowser = function() {
             return chart;
         }
 
-        function createSeasonChart(canvas, title, dataValues, dataColors, dataBorderColors) {
+        let func = () => {
+        };
 
-            let values = [];
-            values.fill(0, 0, dataValues.length);
-
-            let datasets = [{
-                    data: values,
-                    backgroundColor: dataColors,
-                    borderColor: dataBorderColors,
-                    borderWidth: 1
-                }];
-
-
-            let chart = createChart(canvas, title, datasets, onSeasonChartClicked);
-            setTimeout(() => {
-                chart.data.datasets[0].data = dataValues;
-                chart.update();
-            }, 500);
-        }
-
-        createSeasonChart(
-                springCanvas,
-                "Workload, Spring",
-                springWorkloadDataValues,
-                springWorkloadColors,
-                springWorkloadBorderColors
-                );
-
-        createSeasonChart(
-                fallCanvas,
-                "Workload, Fall",
-                fallWorkloadDataValues,
-                fallWorkloadColors,
-                fallWorkloadBorderColors
-                );
+        springChart = createChart(springCanvas, "Workload, Spring", func, 1);
+        fallChart = createChart(fallCanvas, "Workload, Fall", func, 1);
+        update();
     };
 };
