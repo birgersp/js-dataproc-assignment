@@ -160,8 +160,11 @@ TeacherManager.WorkloadBrowser = function() {
             }
 
             // Insert data to chart datasets at index
+
             insertAt(sortedTeachers, index, teacher);
             insertAt(teacherNames, index, teacherName);
+
+            // Insert data (split by season)
             insertAt(springWorkloadColors, index, getWorkloadColor(springWorkload, employment));
             insertAt(springWorkloadBorderColors, index, getWorkloadBorderColor(springWorkload, employment));
             insertAt(springWorkloadDataValues, index, springWorkload);
@@ -170,25 +173,16 @@ TeacherManager.WorkloadBrowser = function() {
             insertAt(fallWorkloadDataValues, index, fallWorkload);
         }
 
-        function createChart(canvas, title, dataValues, dataColors, dataBorderColors) {
-
-            let values = [];
-            values.fill(0, 0, dataValues.length);
+        function createChart(canvas, title, datasets, onChartClicked) {
 
             let chart = new Chart(canvas, {
                 type: 'horizontalBar',
                 data: {
                     labels: teacherNames,
-                    datasets: [
-                        {
-                            data: values,
-                            backgroundColor: dataColors,
-                            borderColor: dataBorderColors,
-                            borderWidth: 1
-                        }]
+                    datasets: datasets
                 },
                 options: {
-                    onClick: onSeasonChartClicked,
+                    onClick: onChartClicked,
                     scales: {
                         xAxes: [{
                                 ticks: {
@@ -212,11 +206,9 @@ TeacherManager.WorkloadBrowser = function() {
                             label: function(tooltipItem, data) {
                                 var value = data.datasets[0].data[tooltipItem.index];
                                 var label = data.labels[tooltipItem.index];
-
                                 if (value === 0.1) {
                                     value = 0;
                                 }
-
                                 return label + ': ' + value + ' %';
                             }
                         }
@@ -224,13 +216,30 @@ TeacherManager.WorkloadBrowser = function() {
                 }
             });
 
+            return chart;
+        }
+
+        function createSeasonChart(canvas, title, dataValues, dataColors, dataBorderColors) {
+
+            let values = [];
+            values.fill(0, 0, dataValues.length);
+
+            let datasets = [{
+                    data: values,
+                    backgroundColor: dataColors,
+                    borderColor: dataBorderColors,
+                    borderWidth: 1
+                }];
+
+
+            let chart = createChart(canvas, title, datasets, onSeasonChartClicked);
             setTimeout(() => {
                 chart.data.datasets[0].data = dataValues;
                 chart.update();
             }, 500);
         }
 
-        createChart(
+        createSeasonChart(
                 springCanvas,
                 "Workload, Spring",
                 springWorkloadDataValues,
@@ -238,7 +247,7 @@ TeacherManager.WorkloadBrowser = function() {
                 springWorkloadBorderColors
                 );
 
-        createChart(
+        createSeasonChart(
                 fallCanvas,
                 "Workload, Fall",
                 fallWorkloadDataValues,
