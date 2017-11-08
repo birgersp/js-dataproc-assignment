@@ -9,7 +9,7 @@ TeacherManager.OptionsDropdown = function(container) {
 
     let self = this;
 
-    let options = {};
+    this.options = {};
     let dropdownList = null;
 
     this.onChange = function() {};
@@ -45,10 +45,7 @@ TeacherManager.OptionsDropdown = function(container) {
         });
     }
 
-    this.addOption = function(optionID, label, checked) {
-
-        if (checked == undefined)
-            checked = false;
+    this.addOption = function(optionID, label) {
 
         let listItem = createElement("li", dropdownList);
         let link = createElement("a", listItem, {
@@ -67,7 +64,7 @@ TeacherManager.OptionsDropdown = function(container) {
 
             let element = document.getElementById(checkboxID);
             element.checked = !element.checked;
-            options[optionID] = element.checked;
+            self.options[optionID] = element.checked;
         };
 
         link.onclick = function(e) {
@@ -78,14 +75,11 @@ TeacherManager.OptionsDropdown = function(container) {
         };
         link.innerHTML += " " + label;
 
-        options[optionID] = false;
-        if (checked)
-            toggle();
+        if (self.options[optionID] == undefined)
+            self.options[optionID] = false;
+        else
+            document.getElementById(checkboxID).checked = self.options[optionID];
 
         TeacherManager.OptionsDropdown.checkboxes++;
-    };
-
-    this.getOptions = function() {
-        return options;
     };
 };

@@ -25,7 +25,10 @@ TeacherManager.WorkloadBrowser = function() {
     let sortedTeachers = [];
     let warningHeader = null;
 
-    let options = null;
+    let options = {
+        showStudAss: true,
+        showExternal: false
+    };
 
     let combinedChart = null;
     let springChart = null;
@@ -101,6 +104,10 @@ TeacherManager.WorkloadBrowser = function() {
         for (let index in sortedTeachers) {
 
             let teacher = sortedTeachers[index];
+
+            if (!options[0] && teacher.isExternal)
+                continue;
+
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
 
             let springWorkload = teacher.workloadPercent.spring;
@@ -108,7 +115,6 @@ TeacherManager.WorkloadBrowser = function() {
 
             let employment = teacher.employmentPercentage;
 
-            sortedTeachers.push(teacher);
             labels.push(teacherName);
 
             // Insert data (split by season)
@@ -150,12 +156,11 @@ TeacherManager.WorkloadBrowser = function() {
     this.initialize = function() {
 
         let dropdown = new TeacherManager.OptionsDropdown(self.container);
-        self.options = dropdown.getOptions();
+        dropdown.options = options;
         dropdown.onChange = update;
 
-        dropdown.addOption("splitSeasons", "Split by seasons", false);
-        dropdown.addOption("showStudAss", "Show stud.ass.", true);
-        dropdown.addOption("showExternal", "Show external", true);
+        dropdown.addOption("showStudAss", "Show stud.ass.");
+        dropdown.addOption("showExternal", "Show external");
 
         warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
     };
