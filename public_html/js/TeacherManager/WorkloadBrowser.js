@@ -12,7 +12,9 @@ if (!window.TeacherManager)
 TeacherManager.WorkloadBrowser = function() {
 
     const COLOR_ALPHA = 0.2;
-    const MAX_WORKLOAD_THRESHOLD = 250;
+
+    // Reduce overloaded teacher "redness" with this factor, higher value means higher overload will be ok (greener)
+    const OVERLOAD_ERROR_REDUCTION = 1.0;
 
     let self = this;
 
@@ -72,21 +74,33 @@ TeacherManager.WorkloadBrowser = function() {
 
         let maxWorkload = 0;
 
-        function getWorkloadColorRGB(workloadPercent) {
+        function getWorkloadColorRGB(workload, employment) {
 
-            let factor;
+            // Factor defines how "correct" the workload is according to the employment
+            let correctness;
 
-            if (workloadPercent <= 100) {
-                factor = workloadPercent / 100;
-            } else {
-                let overshoot = workloadPercent - 100;
-                factor = 1 - overshoot / (MAX_WORKLOAD_THRESHOLD - 100);
+            // If workload is too low, decrease factor with higher workload
+            if (workload <= employment) {
+
+                correctness = workload / employment;
+
+            }
+            // If workload is too high, increase factor with higher workload
+            else {
+
+                // 0 employment yields high factor
+                if (employment == 0)
+                    correctness = 1;
+                else {
+                    // Increase factor with higher workload
+                    correctness = 1 - (workload - employment) / employment / OVERLOAD_ERROR_REDUCTION;
+                }
             }
 
-            if (factor < 0)
-                factor = 0;
+            if (correctness < 0)
+                correctness = 0;
 
-            let hue = 1 / 3 * factor;
+            let hue = 1 / 3 * correctness;
             let rgb = colorconv.HSV2RGB([hue, 1, 0.85]);
             let rgbString = "";
 
@@ -99,14 +113,14 @@ TeacherManager.WorkloadBrowser = function() {
             return rgbString;
         }
 
-        function getWorkloadBorderColor(workloadPercent) {
+        function getWorkloadBorderColor(workloadPercent, employment) {
 
-            return 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',1)';
+            return 'rgba(' + getWorkloadColorRGB(workloadPercent, employment) + ',1)';
         }
 
-        function getWorkloadColor(workloadPercent) {
+        function getWorkloadColor(workloadPercent, employment) {
 
-            return 'rgba(' + getWorkloadColorRGB(workloadPercent) + ',' + COLOR_ALPHA + ')';
+            return 'rgba(' + getWorkloadColorRGB(workloadPercent, employment) + ',' + COLOR_ALPHA + ')';
         }
 
         function insertAt(array, index, item) {
@@ -127,6 +141,8 @@ TeacherManager.WorkloadBrowser = function() {
             if (fallWorkload > maxWorkload)
                 maxWorkload = fallWorkload;
 
+            let employment = teacher.employmentPercentage;
+
             // Determine index according to first letter in name (sorting alphabetically)
             let teacherNameCharCode = teacherName.charCodeAt(0);
             let found = false;
@@ -146,11 +162,11 @@ TeacherManager.WorkloadBrowser = function() {
             // Insert data to chart datasets at index
             insertAt(sortedTeachers, index, teacher);
             insertAt(teacherNames, index, teacherName);
-            insertAt(springWorkloadColors, index, getWorkloadColor(springWorkload));
-            insertAt(springWorkloadBorderColors, index, getWorkloadBorderColor(springWorkload));
+            insertAt(springWorkloadColors, index, getWorkloadColor(springWorkload, employment));
+            insertAt(springWorkloadBorderColors, index, getWorkloadBorderColor(springWorkload, employment));
             insertAt(springWorkloadDataValues, index, springWorkload);
-            insertAt(fallWorkloadColors, index, getWorkloadColor(fallWorkload));
-            insertAt(fallWorkloadBorderColors, index, getWorkloadBorderColor(fallWorkload));
+            insertAt(fallWorkloadColors, index, getWorkloadColor(fallWorkload, employment));
+            insertAt(fallWorkloadBorderColors, index, getWorkloadBorderColor(fallWorkload, employment));
             insertAt(fallWorkloadDataValues, index, fallWorkload);
         }
 
@@ -178,7 +194,7 @@ TeacherManager.WorkloadBrowser = function() {
                                 ticks: {
                                     beginAtZero: true,
                                     callback: function(value, index, values) {
-                                        return value + "%" + (value == MAX_WORKLOAD_THRESHOLD ? "+" : "");
+                                        return value + "%";
                                     },
                                     max: maxWorkload
                                 }
@@ -211,7 +227,7 @@ TeacherManager.WorkloadBrowser = function() {
             setTimeout(() => {
                 chart.data.datasets[0].data = dataValues;
                 chart.update();
-            }, 0);
+            }, 500);
         }
 
         createChart(
