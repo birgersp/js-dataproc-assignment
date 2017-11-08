@@ -19,6 +19,8 @@ TeacherManager.WorkloadBrowser = function() {
     let sortedTeachers = [];
     let warningHeader = null;
 
+    let options = null;
+
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
 
@@ -29,9 +31,19 @@ TeacherManager.WorkloadBrowser = function() {
         }
     }
 
+    function onOptionsChanged() {
+        // TODO: modify view according to options
+        console.log(self.options);
+    }
+
     this.initialize = function() {
 
         let dropdown = new TeacherManager.OptionsDropdown(self.container);
+        self.options = dropdown.getOptions();
+        dropdown.onChange = onOptionsChanged;
+
+        dropdown.addOption("split_seasons", "Split by seasons", true);
+
         warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
     };
 

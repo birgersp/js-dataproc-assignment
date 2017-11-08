@@ -7,10 +7,20 @@ if (!window.TeacherManager)
 
 TeacherManager.OptionsDropdown = function(container) {
 
-    if (!container)
-        container = document.body;
+    let self = this;
 
-    (() => {
+    let options = {};
+    let dropdownList = null;
+
+    this.onChange = function() {};
+
+    {
+        if (!container)
+            container = document.body;
+
+        if (TeacherManager.OptionsDropdown.checkboxes == undefined) {
+            TeacherManager.OptionsDropdown.checkboxes = 0;
+        }
 
         let dropdownDiv = createElement("div", container, {"class": "dropdown"});
 
@@ -24,41 +34,58 @@ TeacherManager.OptionsDropdown = function(container) {
             "class": "glyphicon glyphicon-cog",
             innerHTML: " "
         });
-
         button.innerHTML += " ";
 
         createElement("span", button, {
             "class": "caret"
         });
 
-        let dropdownList = createElement("ul", dropdownDiv, {
+        dropdownList = createElement("ul", dropdownDiv, {
             "class": "dropdown-menu"
         });
+    }
 
-        let li1 = createElement("li", dropdownList);
-        let a1 = createElement("a", li1, {
+    this.addOption = function(optionID, label, checked) {
+
+        if (checked == undefined)
+            checked = false;
+
+        let listItem = createElement("li", dropdownList);
+        let link = createElement("a", listItem, {
             href: "#",
             "class": "small"
         });
 
-        let checkbox1 = createElement("input", a1, {
+        let checkboxID = "tm-checkbox" + TeacherManager.OptionsDropdown.checkboxes;
+
+        createElement("input", link, {
             type: "checkbox",
-            id: "checkbox"
+            id: checkboxID
         });
 
-        let check = () => {
-            let element = document.getElementById("checkbox");
+        let toggle = () => {
+
+            let element = document.getElementById(checkboxID);
             element.checked = !element.checked;
+            options[optionID] = element.checked;
         };
 
-        a1.onclick = function(e) {
-            check();
+        link.onclick = function(e) {
+
             e.stopPropagation();
+            toggle();
+            self.onChange();
         };
+        link.innerHTML += " " + label;
 
-        a1.innerHTML += " Option 1";
-    })();
+        options[optionID] = false;
+        if (checked)
+            toggle();
 
-    this.addCheckbox = function(label) {
+        TeacherManager.OptionsDropdown.checkboxes++;
+    };
+
+    this.getOptions = function() {
+        return options;
     };
 };
