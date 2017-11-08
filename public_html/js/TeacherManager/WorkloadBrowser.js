@@ -188,8 +188,6 @@ TeacherManager.WorkloadBrowser = function() {
                         text: title
                     },
                     tooltips: {
-                        intersect: false,
-                        mode: 'y',
                         callbacks: {
                             label: function(tooltipItem, data) {
                                 var value = data.datasets[0].data[tooltipItem.index];
