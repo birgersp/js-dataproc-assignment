@@ -31,7 +31,8 @@ TeacherManager.WorkloadBrowser = function() {
         }
     }
 
-    function onOptionsChanged() {
+    function update() {
+
         // TODO: modify view according to options
         console.log(self.options);
     }
@@ -40,9 +41,11 @@ TeacherManager.WorkloadBrowser = function() {
 
         let dropdown = new TeacherManager.OptionsDropdown(self.container);
         self.options = dropdown.getOptions();
-        dropdown.onChange = onOptionsChanged;
+        dropdown.onChange = update;
 
-        dropdown.addOption("split_seasons", "Split by seasons", true);
+        dropdown.addOption("splitSeasons", "Split by seasons", false);
+        dropdown.addOption("showStudAss", "Show stud.ass.", true);
+        dropdown.addOption("showExternal", "Show external", true);
 
         warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
     };
@@ -66,6 +69,8 @@ TeacherManager.WorkloadBrowser = function() {
         let fallWorkloadDataValues = [];
         let fallWorkloadColors = [];
         let fallWorkloadBorderColors = [];
+
+        let maxWorkload = 0;
 
         function getWorkloadColorRGB(workloadPercent) {
 
@@ -116,6 +121,12 @@ TeacherManager.WorkloadBrowser = function() {
             let springWorkload = teacher.workloadPercent.spring;
             let fallWorkload = teacher.workloadPercent.fall;
 
+            if (springWorkload > maxWorkload)
+                maxWorkload = springWorkload;
+
+            if (fallWorkload > maxWorkload)
+                maxWorkload = fallWorkload;
+
             // Determine index according to first letter in name (sorting alphabetically)
             let teacherNameCharCode = teacherName.charCodeAt(0);
             let found = false;
@@ -165,7 +176,7 @@ TeacherManager.WorkloadBrowser = function() {
                                     callback: function(value, index, values) {
                                         return value + "%" + (value == MAX_WORKLOAD_THRESHOLD ? "+" : "");
                                     },
-                                    max: MAX_WORKLOAD_THRESHOLD
+                                    max: maxWorkload
                                 }
                             }]
                     },
@@ -175,6 +186,22 @@ TeacherManager.WorkloadBrowser = function() {
                     title: {
                         display: true,
                         text: title
+                    },
+                    tooltips: {
+                        intersect: false,
+                        mode: 'y',
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var value = data.datasets[0].data[tooltipItem.index];
+                                var label = data.labels[tooltipItem.index];
+
+                                if (value === 0.1) {
+                                    value = 0;
+                                }
+
+                                return label + ': ' + value + ' %';
+                            }
+                        }
                     }
                 }
             });
