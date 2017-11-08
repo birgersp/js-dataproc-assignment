@@ -16,6 +16,10 @@ TeacherManager.WorkloadBrowser = function() {
     // Reduce overloaded teacher "redness" with this factor, higher value means higher overload will be ok (greener)
     const OVERLOAD_ERROR_REDUCTION = 1.0;
 
+    const CHART_MAX_WIDTH = 1600;
+    const CHART_HEIGHT_PER_LABEL = 13;
+    const CHART_MISC_HEIGHT = 100;
+
     let self = this;
 
     let teachers = [];
@@ -146,6 +150,13 @@ TeacherManager.WorkloadBrowser = function() {
             insertAt(fallWorkloadDataValues, index, fallWorkload);
         }
 
+        function updateChartHeight(chart) {
+
+            let noOfLabels = chart.data.labels.length;
+            let container = chart.canvas.parentNode;
+            container.style.setProperty("height", (CHART_MISC_HEIGHT + (noOfLabels * CHART_HEIGHT_PER_LABEL)) + "px");
+        }
+
         let springDataset = springChart.data.datasets[0];
         springDataset.data = springWorkloadDataValues;
         springDataset.backgroundColor = springWorkloadColors;
@@ -153,6 +164,7 @@ TeacherManager.WorkloadBrowser = function() {
         springDataset.borderWidth = 1;
         springChart.data.labels = labels;
         springChart.options.scales.xAxes[0].ticks.max = maxWorkload;
+        updateChartHeight(springChart);
         springChart.update();
 
         let fallDataset = fallChart.data.datasets[0];
@@ -162,10 +174,8 @@ TeacherManager.WorkloadBrowser = function() {
         fallDataset.borderWidth = 1;
         fallChart.data.labels = labels;
         fallChart.options.scales.xAxes[0].ticks.max = maxWorkload;
+        updateChartHeight(fallChart);
         fallChart.update();
-
-        // TODO: modify view according to options
-        console.log(self.options);
     }
 
     this.initialize = function() {
@@ -187,11 +197,18 @@ TeacherManager.WorkloadBrowser = function() {
 
         warningHeader.parentNode.removeChild(warningHeader);
 
-        let seasonChartsCanvasContainer = createElement("div", self.container);
-        seasonChartsCanvasContainer.style.setProperty("max-width", "1600px");
+        function createChartContainedCanvas() {
 
-        let springCanvas = createElement("canvas", seasonChartsCanvasContainer);
-        let fallCanvas = createElement("canvas", seasonChartsCanvasContainer);
+            let container = createElement("div", self.container);
+            container.style.setProperty("max-width", CHART_MAX_WIDTH + "px");
+            container.style.setProperty("margin", "0px");
+            container.style.setProperty("padding", "0px");
+            let canvas = createElement("canvas", container);
+            return canvas;
+        }
+
+        let springCanvas = createChartContainedCanvas();
+        let fallCanvas = createChartContainedCanvas();
 
         function createChart(canvas, title, onChartClicked, noOfDatasets) {
 
@@ -242,7 +259,8 @@ TeacherManager.WorkloadBrowser = function() {
                                 return label + ': ' + value + ' %';
                             }
                         }
-                    }
+                    },
+                    maintainAspectRatio: false
                 }
             });
 
