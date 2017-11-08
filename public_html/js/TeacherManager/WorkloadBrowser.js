@@ -155,13 +155,17 @@ TeacherManager.WorkloadBrowser = function() {
         }
 
         function createChart(canvas, title, dataValues, dataColors, dataBorderColors) {
-            new Chart(canvas, {
+
+            let values = [];
+            values.fill(0, 0, dataValues.length);
+
+            let chart = new Chart(canvas, {
                 type: 'horizontalBar',
                 data: {
                     labels: teacherNames,
                     datasets: [
                         {
-                            data: dataValues,
+                            data: values,
                             backgroundColor: dataColors,
                             borderColor: dataBorderColors,
                             borderWidth: 1
@@ -203,6 +207,11 @@ TeacherManager.WorkloadBrowser = function() {
                     }
                 }
             });
+
+            setTimeout(() => {
+                chart.data.datasets[0].data = dataValues;
+                chart.update();
+            }, 0);
         }
 
         createChart(
