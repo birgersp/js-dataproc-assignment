@@ -22,7 +22,6 @@ TeacherManager.WorkloadBrowser = function() {
 
     let self = this;
 
-    let teachers = [];
     let sortedTeachers = [];
     let warningHeader = null;
 
@@ -49,7 +48,6 @@ TeacherManager.WorkloadBrowser = function() {
         let fallWorkloadDataValues = [];
         let fallWorkloadColors = [];
         let fallWorkloadBorderColors = [];
-        let maxWorkload = 0;
 
         function getWorkloadColorRGB(workload, employment) {
 
@@ -100,54 +98,27 @@ TeacherManager.WorkloadBrowser = function() {
             return 'rgba(' + getWorkloadColorRGB(workloadPercent, employment) + ',' + COLOR_ALPHA + ')';
         }
 
-        function insertAt(array, index, item) {
-            array.splice(index, 0, item);
-        }
+        for (let index in sortedTeachers) {
 
-        for (let teacherID in teachers) {
-
-            let teacher = teachers[teacherID];
+            let teacher = sortedTeachers[index];
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
 
             let springWorkload = teacher.workloadPercent.spring;
             let fallWorkload = teacher.workloadPercent.fall;
 
-            if (springWorkload > maxWorkload)
-                maxWorkload = springWorkload;
-
-            if (fallWorkload > maxWorkload)
-                maxWorkload = fallWorkload;
-
             let employment = teacher.employmentPercentage;
 
-            // Determine index according to first letter in name (sorting alphabetically)
-            let teacherNameCharCode = teacherName.charCodeAt(0);
-            let found = false;
-            let index = 0;
-            while (!found) {
-                if (index >= labels.length) {
-                    index = labels.length;
-                    found = true;
-                } else {
-                    if (labels[index].charCodeAt(0) > teacherNameCharCode)
-                        found = true;
-                    else
-                        index++;
-                }
-            }
-
-            // Insert data to chart datasets at index
-
-            insertAt(sortedTeachers, index, teacher);
-            insertAt(labels, index, teacherName);
+            sortedTeachers.push(teacher);
+            labels.push(teacherName);
 
             // Insert data (split by season)
-            insertAt(springWorkloadColors, index, getWorkloadColor(springWorkload, employment));
-            insertAt(springWorkloadBorderColors, index, getWorkloadBorderColor(springWorkload, employment));
-            insertAt(springWorkloadDataValues, index, springWorkload);
-            insertAt(fallWorkloadColors, index, getWorkloadColor(fallWorkload, employment));
-            insertAt(fallWorkloadBorderColors, index, getWorkloadBorderColor(fallWorkload, employment));
-            insertAt(fallWorkloadDataValues, index, fallWorkload);
+            springWorkloadColors.push(getWorkloadColor(springWorkload, employment));
+            springWorkloadBorderColors.push(getWorkloadBorderColor(springWorkload, employment));
+            springWorkloadDataValues.push(springWorkload);
+
+            fallWorkloadColors.push(getWorkloadColor(fallWorkload, employment));
+            fallWorkloadBorderColors.push(getWorkloadBorderColor(fallWorkload, employment));
+            fallWorkloadDataValues.push(fallWorkload);
         }
 
         function updateChartHeight(chart) {
@@ -163,7 +134,6 @@ TeacherManager.WorkloadBrowser = function() {
         springDataset.borderColor = springWorkloadBorderColors;
         springDataset.borderWidth = 1;
         springChart.data.labels = labels;
-        springChart.options.scales.xAxes[0].ticks.max = maxWorkload;
         updateChartHeight(springChart);
         springChart.update();
 
@@ -173,7 +143,6 @@ TeacherManager.WorkloadBrowser = function() {
         fallDataset.borderColor = fallWorkloadBorderColors;
         fallDataset.borderWidth = 1;
         fallChart.data.labels = labels;
-        fallChart.options.scales.xAxes[0].ticks.max = maxWorkload;
         updateChartHeight(fallChart);
         fallChart.update();
     }
@@ -191,9 +160,39 @@ TeacherManager.WorkloadBrowser = function() {
         warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
     };
 
-    this.setTeacherData = function(newTeachers) {
+    this.setTeacherData = function(teachers) {
 
-        teachers = newTeachers;
+        let maxWorkload = 0;
+
+        for (let teacherID in teachers) {
+            let teacher = teachers[teacherID];
+
+            // Determine index according to first letter in name (sorting alphabetically)
+            let teacherNameCharCode = teacher.lastName.charCodeAt(0);
+            let found = false;
+            let index = 0;
+            while (!found) {
+                if (index >= sortedTeachers.length) {
+                    index = sortedTeachers.length;
+                    found = true;
+                } else {
+                    if (sortedTeachers[index].lastName.charCodeAt(0) > teacherNameCharCode)
+                        found = true;
+                    else
+                        index++;
+                }
+            }
+            sortedTeachers.splice(index, 0, teacher);
+
+            let springWorkload = teacher.workloadPercent.spring;
+            let fallWorkload = teacher.workloadPercent.fall;
+
+            if (springWorkload > maxWorkload)
+                maxWorkload = springWorkload;
+
+            if (fallWorkload > maxWorkload)
+                maxWorkload = fallWorkload;
+        }
 
         warningHeader.parentNode.removeChild(warningHeader);
 
@@ -237,7 +236,7 @@ TeacherManager.WorkloadBrowser = function() {
                                     callback: function(value, index, values) {
                                         return value + "%";
                                     },
-                                    max: 100
+                                    max: maxWorkload
                                 }
                             }]
                     },
