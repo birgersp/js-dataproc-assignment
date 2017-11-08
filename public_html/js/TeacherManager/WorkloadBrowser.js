@@ -4,6 +4,8 @@ include("../utilities/utilities.js");
 include("../thirdparty/Chart.min.js");
 include("../thirdparty/colorconverter.js"); /* global colorconv */
 
+include("OptionsDropdown.js");
+
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
@@ -15,6 +17,7 @@ TeacherManager.WorkloadBrowser = function() {
     let self = this;
 
     let sortedTeachers = [];
+    let warningHeader = null;
 
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
@@ -26,68 +29,15 @@ TeacherManager.WorkloadBrowser = function() {
         }
     }
 
-    function createDropdown() {
-
-        let someContainer = createElement("div", self.container, {"class": "dropdown"});
-
-        let buttonDiv = createElement("div", someContainer, {
-            "class": "button-group"
-        });
-
-        let button = createElement("button", buttonDiv, {
-            type: "button",
-            "class": "btn btn-default btn-sm dropdown-toggle",
-            "data-toggle": "dropdown"
-        });
-
-        createElement("span", button, {
-            "class": "glyphicon glyphicon-cog",
-            innerHTML: " "
-        });
-
-        button.innerHTML += " ";
-
-        createElement("span", button, {
-            "class": "caret"
-        });
-
-        let dropdownList = createElement("ul", buttonDiv, {
-            "class": "dropdown-menu"
-        });
-
-        let li1 = createElement("li", dropdownList);
-        let a1 = createElement("a", li1, {
-            href: "#",
-            "class": "small"
-        });
-
-        let checkbox1 = createElement("input", a1, {
-            type: "checkbox",
-            id: "checkbox"
-        });
-
-        let check = () => {
-            let element = document.getElementById("checkbox");
-            element.checked = !element.checked;
-        };
-
-        a1.onclick = function(e) {
-            check();
-            e.stopPropagation();
-        };
-
-        a1.innerHTML += " Option 1";
-    }
-
     this.initialize = function() {
-        // TODO: maybe show some warning here, "awating data"
+
+        let dropdown = new TeacherManager.OptionsDropdown(self.container);
+        warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
     };
 
     this.setTeacherData = function(teachers) {
 
-        self.container.innerHTML = "";
-
-        createDropdown();
+        warningHeader.parentNode.removeChild(warningHeader);
 
         let seasonChartsCanvasContainer = createElement("div", self.container);
         seasonChartsCanvasContainer.style.setProperty("max-width", "1600px");

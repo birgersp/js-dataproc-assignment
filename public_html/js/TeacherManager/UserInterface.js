@@ -98,10 +98,6 @@ TeacherManager.UserInterface = function() {
         if (noOfTabs === 0)
             tabContainer.classList.add("active");
 
-        createElement("h4", tabContainer, {
-            innerHTML: "Loading ..."
-        });
-
         noOfTabs++;
 
         let tab = new TeacherManager.Tab();
