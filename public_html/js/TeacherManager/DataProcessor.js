@@ -103,11 +103,13 @@ TeacherManager.DataProcessor = function() {
             if (teacher == undefined)
                 throw "Teacher " + teacherID + " is missing from the register";
 
-            let sampleWorkloadPercent = Number(sample["percent_course"]);
+            let courseWorkload = Number(sample["teacher_workload_hours"]);
+            let teacherCoursePercentage = Number(sample["percent_course"]);
+            let teacherCourseWorkload = courseWorkload * (teacherCoursePercentage / 100);
             if (course.season == TeacherManager.Course.Season.SPRING)
-                teacher.workloadPercent.spring += sampleWorkloadPercent;
+                teacher.workload.spring += teacherCourseWorkload;
             else
-                teacher.workloadPercent.fall += sampleWorkloadPercent;
+                teacher.workload.fall += teacherCourseWorkload;
         }
     }
 

@@ -59,26 +59,26 @@ TeacherManager.WorkloadBrowser = function() {
         let fallWorkloadColors = [];
         let fallWorkloadBorderColors = [];
 
-        function getWorkloadColorRGB(workload, employment) {
+        function getWorkloadColorRGB(workload, ideal) {
 
             // Factor defines how "correct" the workload is according to the employment
             let correctness;
 
             // If workload is too low, decrease factor with higher workload
-            if (workload <= employment) {
+            if (workload <= ideal) {
 
-                correctness = workload / employment;
+                correctness = workload / ideal;
 
             }
             // If workload is too high, increase factor with higher workload
             else {
 
                 // 0 employment yields high factor
-                if (employment == 0)
+                if (ideal == 0)
                     correctness = 1;
                 else {
                     // Increase factor with higher workload
-                    correctness = 1 - (workload - employment) / employment / OVERLOAD_ERROR_REDUCTION;
+                    correctness = 1 - (workload - ideal) / ideal / OVERLOAD_ERROR_REDUCTION;
                 }
             }
 
@@ -98,14 +98,14 @@ TeacherManager.WorkloadBrowser = function() {
             return rgbString;
         }
 
-        function getWorkloadBorderColor(workloadPercent, employment) {
+        function getWorkloadBorderColor(workload, employment) {
 
-            return 'rgba(' + getWorkloadColorRGB(workloadPercent, employment) + ',1)';
+            return 'rgba(' + getWorkloadColorRGB(workload, employment) + ',1)';
         }
 
-        function getWorkloadColor(workloadPercent, employment) {
+        function getWorkloadColor(workload, employment) {
 
-            return 'rgba(' + getWorkloadColorRGB(workloadPercent, employment) + ',' + COLOR_ALPHA + ')';
+            return 'rgba(' + getWorkloadColorRGB(workload, employment) + ',' + COLOR_ALPHA + ')';
         }
 
         for (let index in sortedTeachers) {
@@ -120,8 +120,8 @@ TeacherManager.WorkloadBrowser = function() {
 
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
 
-            let springWorkload = teacher.workloadPercent.spring;
-            let fallWorkload = teacher.workloadPercent.fall;
+            let springWorkload = teacher.workload.spring;
+            let fallWorkload = teacher.workload.fall;
 
             let employment = teacher.employmentPercentage;
 
@@ -205,8 +205,8 @@ TeacherManager.WorkloadBrowser = function() {
             }
             sortedTeachers.splice(index, 0, teacher);
 
-            let springWorkload = teacher.workloadPercent.spring;
-            let fallWorkload = teacher.workloadPercent.fall;
+            let springWorkload = teacher.workload.spring;
+            let fallWorkload = teacher.workload.fall;
 
             if (springWorkload > maxWorkload)
                 maxWorkload = springWorkload;
@@ -254,9 +254,6 @@ TeacherManager.WorkloadBrowser = function() {
                         xAxes: [{
                                 ticks: {
                                     beginAtZero: true,
-                                    callback: function(value, index, values) {
-                                        return value + "%";
-                                    },
                                     max: maxWorkload
                                 }
                             }]
@@ -278,7 +275,7 @@ TeacherManager.WorkloadBrowser = function() {
                                 if (value === 0.1) {
                                     value = 0;
                                 }
-                                return label + ': ' + value + ' %';
+                                return label + ': ' + value + ' hours';
                             }
                         }
                     },

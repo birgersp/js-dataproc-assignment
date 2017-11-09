@@ -14,7 +14,7 @@ TeacherManager.Teacher = function() {
     this.employmentPercentage = null;
     this.isStudentAssistant = null;
 
-    this.workloadPercent = {
+    this.workload = {
         spring: 0,
         fall: 0
     };
