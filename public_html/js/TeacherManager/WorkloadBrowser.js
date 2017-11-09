@@ -17,8 +17,14 @@ TeacherManager.WorkloadBrowser = function() {
     const OVERLOAD_ERROR_REDUCTION = 1.0;
 
     const CHART_MAX_WIDTH = 1600;
-    const CHART_HEIGHT_PER_LABEL = 13;
+    const CHART_HEIGHT_PER_LABEL = 40;
     const CHART_MISC_HEIGHT = 100;
+
+    const SPRING_COLOR = "rgba(0,255,0,0.3)";
+    const SPRING_BORDER_COLOR = "rgba(0,255,0,1)";
+
+    const FALL_COLOR = "rgba(0,0,255,0.3)";
+    const FALL_BORDER_COLOR = "rgba(0,0,255,1)";
 
     let self = this;
 
@@ -30,83 +36,26 @@ TeacherManager.WorkloadBrowser = function() {
         showExternal: true
     };
 
-    let springChart = null;
-    let fallChart = null;
+    let workloadChart = null;
 
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
 
-    function onSpringChartClicked(event, array) {
+    function onChartClicked(event, array) {
 
-        let activeTooltip = springChart.tooltip._active[0];
+        let activeTooltip = workloadChart.tooltip._active[0];
         if (activeTooltip) {
             console.log(activeTooltip);
         }
     }
 
-    function onFallChartClicked(event, array) {
-
-        // TODO: determine which teacher is clicked
-    }
-
     function update() {
 
-        let labels = [];
-        let springWorkloadDataValues = [];
-        let springWorkloadColors = [];
-        let springWorkloadBorderColors = [];
-        let fallWorkloadDataValues = [];
-        let fallWorkloadColors = [];
-        let fallWorkloadBorderColors = [];
+        console.log(workloadChart.data);
 
-        function getWorkloadColorRGB(workload, ideal) {
-
-            // Factor defines how "correct" the workload is according to the employment
-            let correctness;
-
-            // If workload is too low, decrease factor with higher workload
-            if (workload <= ideal) {
-
-                correctness = workload / ideal;
-
-            }
-            // If workload is too high, increase factor with higher workload
-            else {
-
-                // 0 employment yields high factor
-                if (ideal == 0)
-                    correctness = 1;
-                else {
-                    // Increase factor with higher workload
-                    correctness = 1 - (workload - ideal) / ideal / OVERLOAD_ERROR_REDUCTION;
-                }
-            }
-
-            if (correctness < 0)
-                correctness = 0;
-
-            let hue = 1 / 3 * correctness;
-            let rgb = colorconv.HSV2RGB([hue, 1, 0.85]);
-            let rgbString = "";
-
-            for (let i in rgb) {
-                if (i > 0)
-                    rgbString += ",";
-                rgbString += Math.floor(rgb[i]);
-            }
-
-            return rgbString;
-        }
-
-        function getWorkloadBorderColor(workload, employment) {
-
-            return 'rgba(' + getWorkloadColorRGB(workload, employment) + ',1)';
-        }
-
-        function getWorkloadColor(workload, employment) {
-
-            return 'rgba(' + getWorkloadColorRGB(workload, employment) + ',' + COLOR_ALPHA + ')';
-        }
+        workloadChart.data.datasets[0].data = [];
+        workloadChart.data.datasets[1].data = [];
+        workloadChart.data.labels = [];
 
         for (let index in sortedTeachers) {
 
@@ -119,25 +68,13 @@ TeacherManager.WorkloadBrowser = function() {
                 continue;
 
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
+            workloadChart.data.labels.push(teacherName);
 
-            let springWorkload = teacher.workload.spring;
-            let fallWorkload = teacher.workload.fall;
-
-            let employment = teacher.employmentPercentage;
-
-            labels.push(teacherName);
-
-            // Insert data (split by season)
-            springWorkloadColors.push(getWorkloadColor(springWorkload, employment));
-            springWorkloadBorderColors.push(getWorkloadBorderColor(springWorkload, employment));
-            springWorkloadDataValues.push(springWorkload);
-
-            fallWorkloadColors.push(getWorkloadColor(fallWorkload, employment));
-            fallWorkloadBorderColors.push(getWorkloadBorderColor(fallWorkload, employment));
-            fallWorkloadDataValues.push(fallWorkload);
+            workloadChart.data.datasets[0].data.push(teacher.workload.spring);
+            workloadChart.data.datasets[1].data.push(teacher.workload.fall);
         }
 
-        function updateSingleDatasetChartHeight(chart) {
+        function updateChartHeight(chart) {
 
             let noOfLabels = chart.data.labels.length;
             let container = chart.canvas.parentNode;
@@ -145,23 +82,8 @@ TeacherManager.WorkloadBrowser = function() {
             chart.resize();
         }
 
-        let springDataset = springChart.data.datasets[0];
-        springDataset.data = springWorkloadDataValues;
-        springDataset.backgroundColor = springWorkloadColors;
-        springDataset.borderColor = springWorkloadBorderColors;
-        springDataset.borderWidth = 1;
-        springChart.data.labels = labels;
-        updateSingleDatasetChartHeight(springChart);
-        springChart.update();
-
-        let fallDataset = fallChart.data.datasets[0];
-        fallDataset.data = fallWorkloadDataValues;
-        fallDataset.backgroundColor = fallWorkloadColors;
-        fallDataset.borderColor = fallWorkloadBorderColors;
-        fallDataset.borderWidth = 1;
-        fallChart.data.labels = labels;
-        updateSingleDatasetChartHeight(fallChart);
-        fallChart.update();
+        updateChartHeight(workloadChart);
+        workloadChart.update();
     }
 
     this.initialize = function() {
@@ -206,11 +128,10 @@ TeacherManager.WorkloadBrowser = function() {
             sortedTeachers.splice(index, 0, teacher);
 
             let springWorkload = teacher.workload.spring;
-            let fallWorkload = teacher.workload.fall;
-
             if (springWorkload > maxWorkload)
                 maxWorkload = springWorkload;
 
+            let fallWorkload = teacher.workload.fall;
             if (fallWorkload > maxWorkload)
                 maxWorkload = fallWorkload;
         }
@@ -227,26 +148,15 @@ TeacherManager.WorkloadBrowser = function() {
             return canvas;
         }
 
-        let springCanvas = createChartContainedCanvas();
-        let fallCanvas = createChartContainedCanvas();
+        let chartCanvas = createChartContainedCanvas();
 
-        function createChart(canvas, title, onChartClicked, noOfDatasets) {
-
-            let datasets = [];
-            for (let i = 0; i < noOfDatasets; i++) {
-                datasets.push({
-                    data: [],
-                    labels: [],
-                    borderColor: [],
-                    backgroundColor: []
-                });
-            }
+        function createChart(canvas, title, onChartClicked) {
 
             let chart = new Chart(canvas, {
                 type: 'horizontalBar',
                 data: {
                     labels: [],
-                    datasets: datasets
+                    datasets: []
                 },
                 options: {
                     onClick: onChartClicked,
@@ -267,17 +177,17 @@ TeacherManager.WorkloadBrowser = function() {
                     },
                     tooltips: {
                         intersect: false,
-                        mode: 'y',
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                var value = data.datasets[0].data[tooltipItem.index];
-                                var label = data.labels[tooltipItem.index];
-                                if (value === 0.1) {
-                                    value = 0;
-                                }
-                                return label + ': ' + value + ' hours';
-                            }
-                        }
+                        mode: 'y'
+//                        ,callbacks: {
+//                            label: function(tooltipItem, data) {
+//                                var value = data.datasets[0].data[tooltipItem.index];
+//                                var label = data.labels[tooltipItem.index];
+//                                if (value === 0.1) {
+//                                    value = 0;
+//                                }
+//                                return label + ': ' + value + ' hours';
+//                            }
+//                        }
                     },
                     maintainAspectRatio: false
                 }
@@ -286,8 +196,19 @@ TeacherManager.WorkloadBrowser = function() {
             return chart;
         }
 
-        springChart = createChart(springCanvas, "Workload, Spring", onSpringChartClicked, 1);
-        fallChart = createChart(fallCanvas, "Workload, Fall", onFallChartClicked, 1);
+        workloadChart = createChart(chartCanvas, "Workload Hours", onChartClicked);
+        workloadChart.data.datasets.push({
+            data: [],
+            backgroundColor: SPRING_COLOR,
+            borderColor: SPRING_BORDER_COLOR,
+            borderWidth: 1
+        });
+        workloadChart.data.datasets.push({
+            data: [],
+            backgroundColor: FALL_COLOR,
+            borderColor: FALL_BORDER_COLOR,
+            borderWidth: 1
+        });
         update();
     };
 };
