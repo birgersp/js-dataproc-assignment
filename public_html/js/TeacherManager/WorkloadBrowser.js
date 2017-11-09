@@ -27,10 +27,9 @@ TeacherManager.WorkloadBrowser = function() {
 
     let options = {
         showStudAss: true,
-        showExternal: false
+        showExternal: true
     };
 
-    let combinedChart = null;
     let springChart = null;
     let fallChart = null;
 
@@ -39,7 +38,10 @@ TeacherManager.WorkloadBrowser = function() {
 
     function onSpringChartClicked(event, array) {
 
-        // TODO: determine which teacher is clicked
+        let activeTooltip = springChart.tooltip._active[0];
+        if (activeTooltip) {
+            console.log(activeTooltip);
+        }
     }
 
     function onFallChartClicked(event, array) {
@@ -164,7 +166,12 @@ TeacherManager.WorkloadBrowser = function() {
 
     this.initialize = function() {
 
-        let dropdown = new TeacherManager.OptionsDropdown(self.container);
+        let dropdownContainer = createElement("div", self.container);
+        setStyle(dropdownContainer, {
+            "margin-left": "20px"
+        });
+
+        let dropdown = new TeacherManager.OptionsDropdown(dropdownContainer);
         dropdown.options = options;
         dropdown.onChange = update;
 
@@ -262,6 +269,8 @@ TeacherManager.WorkloadBrowser = function() {
                         text: title
                     },
                     tooltips: {
+                        intersect: false,
+                        mode: 'y',
                         callbacks: {
                             label: function(tooltipItem, data) {
                                 var value = data.datasets[0].data[tooltipItem.index];

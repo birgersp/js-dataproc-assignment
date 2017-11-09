@@ -73,7 +73,7 @@ TeacherManager.TeacherBrowser = function() {
 
         for (let key in attributeKeys) {
             let tableBodyRow = createElement("tr", tableBody);
-            createElement("td", tableBodyRow, {innerHTML: attributeKeys[key]});
+            createElement("th", tableBodyRow, {innerHTML: attributeKeys[key]});
             createElement("td", tableBodyRow, {innerHTML: teacher[key]});
         }
 

@@ -92,3 +92,14 @@ function createElement(type, parent, attributes) {
 
     return result;
 }
+
+/**
+ * Sets styling properties of a HTML element
+ * @param {Element} element
+ * @param {Object} properties
+ */
+function setStyle(element, properties) {
+    for (let key in properties) {
+        element.style.setProperty(key, properties[key]);
+    }
+}
