@@ -177,17 +177,14 @@ TeacherManager.WorkloadBrowser = function() {
                     },
                     tooltips: {
                         intersect: false,
-                        mode: 'y'
-//                        ,callbacks: {
-//                            label: function(tooltipItem, data) {
-//                                var value = data.datasets[0].data[tooltipItem.index];
-//                                var label = data.labels[tooltipItem.index];
-//                                if (value === 0.1) {
-//                                    value = 0;
-//                                }
-//                                return label + ': ' + value + ' hours';
-//                            }
-//                        }
+                        mode: 'y',
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                var label = data.labels[tooltipItem.index];
+                                return label + ': ' + value + ' hours';
+                            }
+                        }
                     },
                     maintainAspectRatio: false
                 }
