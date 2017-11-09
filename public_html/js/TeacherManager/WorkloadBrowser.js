@@ -37,7 +37,12 @@ TeacherManager.WorkloadBrowser = function() {
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
 
-    function onSeasonChartClicked(event, array) {
+    function onSpringChartClicked(event, array) {
+
+        // TODO: determine which teacher is clicked
+    }
+
+    function onFallChartClicked(event, array) {
 
         // TODO: determine which teacher is clicked
     }
@@ -130,11 +135,12 @@ TeacherManager.WorkloadBrowser = function() {
             fallWorkloadDataValues.push(fallWorkload);
         }
 
-        function updateChartHeight(chart) {
+        function updateSingleDatasetChartHeight(chart) {
 
             let noOfLabels = chart.data.labels.length;
             let container = chart.canvas.parentNode;
             container.style.setProperty("height", (CHART_MISC_HEIGHT + (noOfLabels * CHART_HEIGHT_PER_LABEL)) + "px");
+            chart.resize();
         }
 
         let springDataset = springChart.data.datasets[0];
@@ -143,9 +149,8 @@ TeacherManager.WorkloadBrowser = function() {
         springDataset.borderColor = springWorkloadBorderColors;
         springDataset.borderWidth = 1;
         springChart.data.labels = labels;
-        updateChartHeight(springChart);
+        updateSingleDatasetChartHeight(springChart);
         springChart.update();
-        springChart.resize();
 
         let fallDataset = fallChart.data.datasets[0];
         fallDataset.data = fallWorkloadDataValues;
@@ -153,9 +158,8 @@ TeacherManager.WorkloadBrowser = function() {
         fallDataset.borderColor = fallWorkloadBorderColors;
         fallDataset.borderWidth = 1;
         fallChart.data.labels = labels;
-        updateChartHeight(fallChart);
+        updateSingleDatasetChartHeight(fallChart);
         fallChart.update();
-        fallChart.resize();
     }
 
     this.initialize = function() {
@@ -276,11 +280,8 @@ TeacherManager.WorkloadBrowser = function() {
             return chart;
         }
 
-        let func = () => {
-        };
-
-        springChart = createChart(springCanvas, "Workload, Spring", func, 1);
-        fallChart = createChart(fallCanvas, "Workload, Fall", func, 1);
+        springChart = createChart(springCanvas, "Workload, Spring", onSpringChartClicked, 1);
+        fallChart = createChart(fallCanvas, "Workload, Fall", onFallChartClicked, 1);
         update();
     };
 };
