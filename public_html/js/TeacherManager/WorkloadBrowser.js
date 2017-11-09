@@ -28,6 +28,7 @@ TeacherManager.WorkloadBrowser = function() {
 
     let self = this;
 
+    let activeTeachers = [];
     let sortedTeachers = [];
     let warningHeader = null;
 
@@ -45,13 +46,14 @@ TeacherManager.WorkloadBrowser = function() {
 
         let activeTooltip = workloadChart.tooltip._active[0];
         if (activeTooltip) {
-            console.log(activeTooltip);
+            let teacher = activeTeachers[activeTooltip._index];
+            self.onTeacherSelected(teacher);
         }
     }
 
     function update() {
 
-        console.log(workloadChart.data);
+        activeTeachers = [];
 
         workloadChart.data.datasets[0].data = [];
         workloadChart.data.datasets[1].data = [];
@@ -60,6 +62,7 @@ TeacherManager.WorkloadBrowser = function() {
         for (let index in sortedTeachers) {
 
             let teacher = sortedTeachers[index];
+            activeTeachers.push(teacher);
 
             if (teacher.isExternal && !options.showExternal)
                 continue;
