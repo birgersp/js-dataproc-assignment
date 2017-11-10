@@ -4,6 +4,8 @@ include("../utilities/utilities.js");
 include("../thirdparty/Chart.min.js");
 include("../thirdparty/colorconverter.js"); /* global colorconv */
 
+include("../utilities/vlineplugin.js");
+
 include("OptionsDropdown.js");
 
 function TMWorkloadBrowser() {
@@ -187,6 +189,10 @@ function TMWorkloadBrowser() {
                         }
                     },
                     maintainAspectRatio: false
+                },
+                verticalLine: {
+                    targetValue: 100,
+                    color: 'rgb(255,0,0)'
                 }
             });
 
