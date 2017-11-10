@@ -1,11 +1,11 @@
 
 if (!TeacherManager)
-    throw TeacherManager.name + " is not defined";
+    throw TMname + " is not defined";
 
 // Global web application variable
 window.webapp = {
-    ui: new TeacherManager.UserInterface()
-//    data: new TeacherManager.Data()
+    ui: new TMUserInterface()
+//    data: new TMData()
 };
 
 webapp.displayError = function (error) {

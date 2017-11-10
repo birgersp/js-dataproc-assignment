@@ -4,6 +4,6 @@ include("TeacherManager/App.js");
 
 function main() {
 
-    let app = new TeacherManager.App();
+    let app = new TMApp();
     app.start();
 }

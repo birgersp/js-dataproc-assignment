@@ -5,10 +5,7 @@ include("../thirdparty/bootstrap.min.js");
 
 include("Tab.js");
 
-if (!window.TeacherManager)
-    window.TeacherManager = {};
-
-TeacherManager.UserInterface = function() {
+function TMUserInterface() {
 
     let ui = this;
 
@@ -75,7 +72,7 @@ TeacherManager.UserInterface = function() {
      * Creates a tab in the UI, and returns its corresponding tab object
      * @param {String} id
      * @param {String} label
-     * @returns {TeacherManager.Tab}
+     * @returns {TMTab}
      */
     this.createTab = function(id, label) {
 
@@ -100,11 +97,12 @@ TeacherManager.UserInterface = function() {
 
         noOfTabs++;
 
-        let tab = new TeacherManager.Tab();
+        let tab = new TMTab();
         tab.container = tabContainer;
         tab.id = id;
         tab.tabLink = listItemLink;
         tab.tabLink.addEventListener("click", tab.open);
         return tab;
     };
-};
+}
+;

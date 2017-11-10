@@ -1,7 +1,4 @@
-if (!window.TeacherManager)
-    window.TeacherManager = {};
-
-TeacherManager.TeacherBrowser = function() {
+function TMTeacherBrowser() {
 
     let self = this;
 
@@ -85,4 +82,5 @@ TeacherManager.TeacherBrowser = function() {
         teacherDetailedView.style.setProperty("display", "none");
         teacherOverviewDiv.style.setProperty("display", "block");
     };
-};
+}
+;

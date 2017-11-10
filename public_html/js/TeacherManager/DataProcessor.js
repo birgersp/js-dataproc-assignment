@@ -2,10 +2,7 @@
 
 include("../utilities/utilities.js");
 
-if (!window.TeacherManager)
-    window.TeacherManager = {};
-
-TeacherManager.DataProcessor = function() {
+function TMDataProcessor() {
 
     let studyPrograms = {};
     let courses = {};
@@ -21,7 +18,7 @@ TeacherManager.DataProcessor = function() {
             let studyProgramID = sample["program_id"];
             if (studyProgramID != "" && studyPrograms[studyProgramID]) {
 
-                let studyProgram = new TeacherManager.StudyProgram();
+                let studyProgram = new TMStudyProgram();
 
                 studyProgram.id = studyProgramID;
                 studyProgram.name = sample["program_name"];
@@ -34,14 +31,14 @@ TeacherManager.DataProcessor = function() {
             let courseID = sample["course_id"];
             if (courseID != "" && courses[courseID] == undefined) {
 
-                let course = new TeacherManager.Course();
+                let course = new TMCourse();
 
                 course.id = courseID;
                 course.name = sample["course_name"];
                 course.credits = Number(sample["course_credits"]);
                 course.studyYear = Number(sample["study_year"]);
                 course.mandatory = sample["mandatory_course"].toLowerCase() == "true";
-                course.season = sample["spring_fall"] === "S" ? TeacherManager.Course.Season.SPRING : TeacherManager.Course.Season.FALL;
+                course.season = sample["spring_fall"] === "S" ? TMCourse.Season.SPRING : TMCourse.Season.FALL;
                 course.numberOfStudents = Number(sample["num_students"]);
                 course.teacherWorkloadHours = Number(sample["teacher_workload_hours"]);
 
@@ -52,7 +49,7 @@ TeacherManager.DataProcessor = function() {
             let teacherID = sample["teacher_id"];
             if (teacherID != "" && teachers[teacherID] == undefined) {
 
-                let teacher = new TeacherManager.Teacher();
+                let teacher = new TMTeacher();
 
                 teacher.id = teacherID;
                 teacher.firstName = sample["teacher_firstname"];
@@ -106,7 +103,7 @@ TeacherManager.DataProcessor = function() {
             let courseWorkload = Number(sample["teacher_workload_hours"]);
             let teacherCoursePercentage = Number(sample["percent_course"]);
             let teacherCourseWorkload = courseWorkload * (teacherCoursePercentage / 100);
-            if (course.season == TeacherManager.Course.Season.SPRING)
+            if (course.season == TMCourse.Season.SPRING)
                 teacher.workload.spring += teacherCourseWorkload;
             else
                 teacher.workload.fall += teacherCourseWorkload;
@@ -137,4 +134,5 @@ TeacherManager.DataProcessor = function() {
     this.getTeachers = function() {
         return teachers;
     };
-};
+}
+;

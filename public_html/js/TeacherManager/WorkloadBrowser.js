@@ -6,10 +6,7 @@ include("../thirdparty/colorconverter.js"); /* global colorconv */
 
 include("OptionsDropdown.js");
 
-if (!window.TeacherManager)
-    window.TeacherManager = {};
-
-TeacherManager.WorkloadBrowser = function() {
+function TMWorkloadBrowser() {
 
     const COLOR_ALPHA = 0.2;
 
@@ -96,7 +93,7 @@ TeacherManager.WorkloadBrowser = function() {
             "margin-left": "20px"
         });
 
-        let dropdown = new TeacherManager.OptionsDropdown(dropdownContainer);
+        let dropdown = new TMOptionsDropdown(dropdownContainer);
         dropdown.options = options;
         dropdown.onChange = update;
 
@@ -211,4 +208,5 @@ TeacherManager.WorkloadBrowser = function() {
         });
         update();
     };
-};
+}
+;

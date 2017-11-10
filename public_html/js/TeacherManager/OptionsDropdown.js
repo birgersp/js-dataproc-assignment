@@ -5,7 +5,7 @@ include("../utilities/utilities.js");
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.OptionsDropdown = function(container) {
+function TMOptionsDropdown(container) {
 
     let self = this;
 
@@ -18,8 +18,8 @@ TeacherManager.OptionsDropdown = function(container) {
         if (!container)
             container = document.body;
 
-        if (TeacherManager.OptionsDropdown.checkboxes == undefined) {
-            TeacherManager.OptionsDropdown.checkboxes = 0;
+        if (TMOptionsDropdown.checkboxes == undefined) {
+            TMOptionsDropdown.checkboxes = 0;
         }
 
         let dropdownDiv = createElement("div", container, {"class": "dropdown"});
@@ -53,7 +53,7 @@ TeacherManager.OptionsDropdown = function(container) {
             "class": "small"
         });
 
-        let checkboxID = "tm-checkbox" + TeacherManager.OptionsDropdown.checkboxes;
+        let checkboxID = "tm-checkbox" + TMOptionsDropdown.checkboxes;
 
         createElement("input", link, {
             type: "checkbox",
@@ -80,6 +80,6 @@ TeacherManager.OptionsDropdown = function(container) {
         else
             document.getElementById(checkboxID).checked = self.options[optionID];
 
-        TeacherManager.OptionsDropdown.checkboxes++;
+        TMOptionsDropdown.checkboxes++;
     };
 };

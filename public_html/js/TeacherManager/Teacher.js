@@ -3,7 +3,7 @@
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.Teacher = function() {
+function TMTeacher() {
 
     this.id = null;
     this.firstName = null;

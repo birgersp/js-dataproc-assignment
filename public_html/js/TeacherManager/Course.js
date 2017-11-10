@@ -3,7 +3,7 @@
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.Course = function() {
+function TMCourse() {
 
     // ID
     this.id = null;
@@ -30,7 +30,7 @@ TeacherManager.Course = function() {
     this.teacherWorkloadHours = null;
 };
 
-TeacherManager.Course.Season = {
+TMCourse.Season = {
     SPRING: 1,
     FALL: 2
 };

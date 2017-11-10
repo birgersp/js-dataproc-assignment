@@ -1,7 +1,7 @@
 if (!window.TeacherManager)
     window.TeacherManager = {};
 
-TeacherManager.Tab = function() {
+function TMTab() {
 
     let tab = this;
 

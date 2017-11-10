@@ -9,10 +9,7 @@ include("Course.js");
 include("Teacher.js");
 include("TeacherBrowser.js");
 
-if (!window.TeacherManager)
-    window.TeacherManager = {};
-
-TeacherManager.App = function() {
+function TMApp() {
 
     const APP_TITLE = "Teacher Manager";
 
@@ -32,10 +29,10 @@ TeacherManager.App = function() {
 
     let self = this;
 
-    this.ui = new TeacherManager.UserInterface();
-    this.workloadBrowser = new TeacherManager.WorkloadBrowser();
-    this.dataProcessor = new TeacherManager.DataProcessor();
-    this.teacherBrowser = new TeacherManager.TeacherBrowser();
+    this.ui = new TMUserInterface();
+    this.workloadBrowser = new TMWorkloadBrowser();
+    this.dataProcessor = new TMDataProcessor();
+    this.teacherBrowser = new TMTeacherBrowser();
 
     let tabs = {
         workload: null,
@@ -78,4 +75,5 @@ TeacherManager.App = function() {
 
         self.dataProcessor.process("data/courses.csv", dataProcessed);
     };
-};
+}
+;
