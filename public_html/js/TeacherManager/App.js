@@ -73,7 +73,9 @@ function TMApp() {
         self.workloadBrowser.initialize();
         self.teacherBrowser.initialize();
 
-        self.dataProcessor.process("data/courses.csv", dataProcessed);
+        self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
+            self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
+        });
     };
 }
 ;

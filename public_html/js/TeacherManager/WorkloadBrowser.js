@@ -37,7 +37,8 @@ function TMWorkloadBrowser() {
     let options = {
         showStudAss: true,
         showExternal: true,
-        showMean: true
+        showMean: true,
+        normalize: false
     };
 
     let workloadChart = null;
@@ -50,6 +51,14 @@ function TMWorkloadBrowser() {
 
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
+
+    let defaultTooltipCallback = (label, value) => {
+        return label + ': ' + value + ' hours';
+    };
+
+    let normalizedTooltipCallback = (label, value) => {
+        return label + ': ' + value + '%';
+    };
 
     function onChartClicked(event, array) {
 
@@ -69,6 +78,7 @@ function TMWorkloadBrowser() {
         workloadChart.data.labels = [];
 
         let summedWorkload = 0;
+        let maxWorkload = 0;
 
         for (let index in sortedTeachers) {
 
@@ -84,11 +94,20 @@ function TMWorkloadBrowser() {
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
             workloadChart.data.labels.push(teacherName);
 
-            workloadChart.data.datasets[0].data.push(teacher.workload.spring);
-            workloadChart.data.datasets[1].data.push(teacher.workload.fall);
+            let springWorkload = options.normalize ? teacher.workloadNormalized.spring : teacher.workload.spring;
+            let fallWorkload = options.normalize ? teacher.workloadNormalized.fall : teacher.workload.fall;
 
-            summedWorkload += teacher.workload.spring;
-            summedWorkload += teacher.workload.fall;
+            workloadChart.data.datasets[0].data.push(springWorkload);
+            workloadChart.data.datasets[1].data.push(fallWorkload);
+
+            summedWorkload += springWorkload;
+            summedWorkload += fallWorkload;
+
+            if (springWorkload > maxWorkload)
+                maxWorkload = springWorkload;
+
+            if (fallWorkload > maxWorkload)
+                maxWorkload = fallWorkload;
         }
 
         let meanWorkload = summedWorkload / 2 / activeTeachers.length;
@@ -101,6 +120,8 @@ function TMWorkloadBrowser() {
             container.style.setProperty("height", (CHART_MISC_HEIGHT + (noOfLabels * CHART_HEIGHT_PER_LABEL)) + "px");
             chart.resize();
         }
+
+        workloadChart.options.scales.xAxes[0].ticks.max = maxWorkload;
 
         updateChartHeight(workloadChart);
         workloadChart.update();
@@ -122,13 +143,12 @@ function TMWorkloadBrowser() {
         dropdown.addOption("showStudAss", "Show stud.ass.");
         dropdown.addOption("showExternal", "Show external");
         dropdown.addOption("showMean", "Show mean");
+        dropdown.addOption("normalize", "Normalize");
 
         warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
     };
 
     this.setTeacherData = function(teachers) {
-
-        let maxWorkload = 0;
 
         for (let teacherID in teachers) {
             let teacher = teachers[teacherID];
@@ -149,14 +169,6 @@ function TMWorkloadBrowser() {
                 }
             }
             sortedTeachers.splice(index, 0, teacher);
-
-            let springWorkload = teacher.workload.spring;
-            if (springWorkload > maxWorkload)
-                maxWorkload = springWorkload;
-
-            let fallWorkload = teacher.workload.fall;
-            if (fallWorkload > maxWorkload)
-                maxWorkload = fallWorkload;
         }
 
         warningHeader.parentNode.removeChild(warningHeader);
@@ -187,7 +199,7 @@ function TMWorkloadBrowser() {
                         xAxes: [{
                                 ticks: {
                                     beginAtZero: true,
-                                    max: maxWorkload
+                                    max: 0
                                 }
                             }]
                     },
@@ -200,9 +212,12 @@ function TMWorkloadBrowser() {
                         mode: 'y',
                         callbacks: {
                             label: function(tooltipItem, data) {
-                                var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                var label = data.labels[tooltipItem.index];
-                                return label + ': ' + value + ' hours';
+                                let label = data.labels[tooltipItem.index];
+                                let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                if (options.normalize)
+                                    return normalizedTooltipCallback(label, value);
+                                else
+                                    return defaultTooltipCallback(label, value);
                             }
                         }
                     },

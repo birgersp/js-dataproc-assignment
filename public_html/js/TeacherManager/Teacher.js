@@ -19,4 +19,9 @@ function TMTeacher() {
         fall: 0
     };
     this.courses = {};
-};
+
+    this.workloadNormalized = {
+        spring: 0,
+        fall: 0
+    };
+}

@@ -8,6 +8,11 @@ function TMDataProcessor() {
     let courses = {};
     let teachers = {};
 
+    let semesterHours = {
+        spring: 0,
+        fall: 0
+    };
+
     function populate(samples) {
 
         // Iterate through samples, identify unique programs, courses and teachers
@@ -103,22 +108,65 @@ function TMDataProcessor() {
             let courseWorkload = Number(sample["teacher_workload_hours"]);
             let teacherCoursePercentage = Number(sample["percent_course"]);
             let teacherCourseWorkload = courseWorkload * (teacherCoursePercentage / 100);
-            if (course.season == TMCourse.Season.SPRING)
+            if (course.season == TMCourse.Season.SPRING) {
                 teacher.workload.spring += teacherCourseWorkload;
-            else
+            } else {
                 teacher.workload.fall += teacherCourseWorkload;
+            }
         }
     }
 
-    function process(samples) {
-        populate(samples);
-        addTeacherWorkload(samples);
+    function setTeacherWorkloadNormalized() {
+        for (let teacherID in teachers) {
+            let teacher = teachers[teacherID];
+
+            let employmentFactor = teacher.employmentPercentage / 100;
+
+            let targetWorkloadSpring = employmentFactor * semesterHours.spring;
+            let targetWorkloadFall = employmentFactor * semesterHours.fall;
+
+            if (targetWorkloadSpring > 0)
+                teacher.workloadNormalized.spring = teacher.workload.spring / targetWorkloadSpring;
+            else
+                teacher.workloadNormalized.spring = 0;
+
+            if (targetWorkloadFall > 0)
+                teacher.workloadNormalized.fall = teacher.workload.fall / targetWorkloadFall;
+            else
+                teacher.workloadNormalized.fall = 0;
+        }
     }
 
-    this.process = function(filename, callback) {
+    function loadCoursesDataset(samples) {
+        populate(samples);
+        addTeacherWorkload(samples);
+        setTeacherWorkloadNormalized();
+    }
+
+    this.loadCoursesDataset = function(filename, callback) {
         requestURL(filename, function(csvString) {
             let samples = parseCSVString(csvString, "\r", ";");
-            process(samples);
+            loadCoursesDataset(samples);
+            callback();
+        });
+    };
+
+    this.loadSemesterHours = function(filename, callback) {
+        requestURL(filename, (string) => {
+            let samples = parseCSVString(string, "\r", ";");
+
+            for (let sampleI in samples) {
+                let sample = samples[sampleI];
+                let hours = Number(sample.hours);
+
+                if (sample.semester == "Fall") {
+                    semesterHours.fall = hours;
+                } else //
+                if (sample.semester == "Spring") {
+                    semesterHours.spring = hours;
+                }
+            }
+
             callback();
         });
     };
