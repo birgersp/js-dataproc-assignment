@@ -70,7 +70,7 @@ function TMTeacherBrowser() {
 
         for (let key in attributeKeys) {
             let tableBodyRow = createElement("tr", tableBody);
-            createElement("th", tableBodyRow, {innerHTML: attributeKeys[key]});
+            createElement("th", tableBodyRow, {innerHTML: attributeKeys[key], style: "width: 1%; white-space: nowrap;"});
             createElement("td", tableBodyRow, {innerHTML: teacher[key]});
         }
 
