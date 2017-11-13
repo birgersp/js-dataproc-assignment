@@ -25,6 +25,9 @@ function TMWorkloadBrowser() {
     const FALL_COLOR = "rgba(0,0,255,0.3)";
     const FALL_BORDER_COLOR = "rgba(0,0,255,1)";
 
+    const MEAN_LINE_COLOR = "rgba(255,0,0,0.3)";
+    const MEAN_LINE_BODER_COLOR = "rgba(255,0,0,1)";
+
     let self = this;
 
     let activeTeachers = [];
@@ -170,9 +173,6 @@ function TMWorkloadBrowser() {
                                 }
                             }]
                     },
-                    legend: {
-                        display: false
-                    },
                     title: {
                         display: true,
                         text: title
@@ -192,7 +192,7 @@ function TMWorkloadBrowser() {
                 },
                 verticalLine: {
                     targetValue: 100,
-                    color: 'rgb(255,0,0)'
+                    color: MEAN_LINE_BODER_COLOR
                 }
             });
 
@@ -204,13 +204,15 @@ function TMWorkloadBrowser() {
             data: [],
             backgroundColor: SPRING_COLOR,
             borderColor: SPRING_BORDER_COLOR,
-            borderWidth: 1
+            borderWidth: 1,
+            label: "Spring"
         });
         workloadChart.data.datasets.push({
             data: [],
             backgroundColor: FALL_COLOR,
             borderColor: FALL_BORDER_COLOR,
-            borderWidth: 1
+            borderWidth: 1,
+            label: "Fall"
         });
         update();
     };
