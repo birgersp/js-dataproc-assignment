@@ -19,8 +19,8 @@ function TMWorkloadBrowser() {
     const CHART_HEIGHT_PER_LABEL = 40;
     const CHART_MISC_HEIGHT = 100;
 
-    const SPRING_COLOR = "rgba(0,255,0,0.3)";
-    const SPRING_BORDER_COLOR = "rgba(0,255,0,1)";
+    const SPRING_COLOR = "rgba(0,127,0,0.3)";
+    const SPRING_BORDER_COLOR = "rgba(0,127,0,1)";
 
     const FALL_COLOR = "rgba(0,0,255,0.3)";
     const FALL_BORDER_COLOR = "rgba(0,0,255,1)";
@@ -61,6 +61,8 @@ function TMWorkloadBrowser() {
         workloadChart.data.datasets[1].data = [];
         workloadChart.data.labels = [];
 
+        let summedWorkload = 0;
+
         for (let index in sortedTeachers) {
 
             let teacher = sortedTeachers[index];
@@ -77,7 +79,13 @@ function TMWorkloadBrowser() {
 
             workloadChart.data.datasets[0].data.push(teacher.workload.spring);
             workloadChart.data.datasets[1].data.push(teacher.workload.fall);
+
+            summedWorkload += teacher.workload.spring;
+            summedWorkload += teacher.workload.fall;
         }
+
+        let meanWorkload = summedWorkload / 2 / activeTeachers.length;
+        workloadChart.config.verticalLine.targetValue = meanWorkload;
 
         function updateChartHeight(chart) {
 
@@ -192,7 +200,8 @@ function TMWorkloadBrowser() {
                 },
                 verticalLine: {
                     targetValue: 100,
-                    color: MEAN_LINE_BODER_COLOR
+                    color: MEAN_LINE_BODER_COLOR,
+                    label: "Mean workload"
                 }
             });
 
