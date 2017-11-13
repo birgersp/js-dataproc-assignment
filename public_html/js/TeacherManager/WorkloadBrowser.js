@@ -40,6 +40,11 @@ function TMWorkloadBrowser() {
     };
 
     let workloadChart = null;
+    let chartLine = {
+        targetValue: 0,
+        color: MEAN_LINE_BODER_COLOR,
+        label: "Mean workload"
+    };
 
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
@@ -85,7 +90,7 @@ function TMWorkloadBrowser() {
         }
 
         let meanWorkload = summedWorkload / 2 / activeTeachers.length;
-        workloadChart.config.verticalLine.targetValue = meanWorkload;
+        chartLine.targetValue = meanWorkload;
 
         function updateChartHeight(chart) {
 
@@ -198,11 +203,7 @@ function TMWorkloadBrowser() {
                     },
                     maintainAspectRatio: false
                 },
-                verticalLine: {
-                    targetValue: 100,
-                    color: MEAN_LINE_BODER_COLOR,
-                    label: "Mean workload"
-                }
+                verticalLine: chartLine
             });
 
             return chart;
