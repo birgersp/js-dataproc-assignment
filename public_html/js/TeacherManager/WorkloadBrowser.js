@@ -36,11 +36,13 @@ function TMWorkloadBrowser() {
 
     let options = {
         showStudAss: true,
-        showExternal: true
+        showExternal: true,
+        showMean: true
     };
 
     let workloadChart = null;
     let chartLine = {
+        enabled: options.showMean,
         targetValue: 0,
         color: MEAN_LINE_BODER_COLOR,
         label: "Mean workload"
@@ -102,6 +104,8 @@ function TMWorkloadBrowser() {
 
         updateChartHeight(workloadChart);
         workloadChart.update();
+
+        chartLine.enabled = options.showMean;
     }
 
     this.initialize = function() {
@@ -117,6 +121,7 @@ function TMWorkloadBrowser() {
 
         dropdown.addOption("showStudAss", "Show stud.ass.");
         dropdown.addOption("showExternal", "Show external");
+        dropdown.addOption("showMean", "Show mean");
 
         warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
     };

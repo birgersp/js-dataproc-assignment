@@ -30,7 +30,9 @@ const verticalLinePlugin = {
         if (!chart.config.verticalLine)
             return;
 
-        this.renderVerticalLine(chart, chart.config.verticalLine.color, chart.config.verticalLine.label);
+        if (chart.config.verticalLine.enabled !== false) {
+            this.renderVerticalLine(chart, chart.config.verticalLine.color, chart.config.verticalLine.label);
+        }
     }
 };
 
