@@ -60,6 +60,14 @@ function TMWorkloadBrowser() {
         return label + ': ' + value + '%';
     };
 
+    let defaultLabelCallback = (value) => {
+        return value;
+    };
+
+    let normalizedLabelCallback = (value) => {
+        return value + "%";
+    };
+
     function onChartClicked(event, array) {
 
         let activeTooltip = workloadChart.tooltip._active[0];
@@ -94,8 +102,15 @@ function TMWorkloadBrowser() {
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
             workloadChart.data.labels.push(teacherName);
 
-            let springWorkload = options.normalize ? teacher.workloadNormalized.spring : teacher.workload.spring;
-            let fallWorkload = options.normalize ? teacher.workloadNormalized.fall : teacher.workload.fall;
+            let springWorkload, fallWorkload;
+            if (options.normalize) {
+                springWorkload = Math.round(teacher.workloadNormalized.spring * 100);
+                fallWorkload = Math.round(teacher.workloadNormalized.fall * 100);
+            } else
+            {
+                springWorkload = teacher.workload.spring;
+                fallWorkload = teacher.workload.fall;
+            }
 
             workloadChart.data.datasets[0].data.push(springWorkload);
             workloadChart.data.datasets[1].data.push(fallWorkload);
@@ -199,7 +214,13 @@ function TMWorkloadBrowser() {
                         xAxes: [{
                                 ticks: {
                                     beginAtZero: true,
-                                    max: 0
+                                    max: 0,
+                                    callback: function(value, index, values) {
+                                        if (options.normalize)
+                                            return normalizedLabelCallback(value);
+                                        else
+                                            return defaultLabelCallback(value);
+                                    }
                                 }
                             }]
                     },
@@ -212,7 +233,14 @@ function TMWorkloadBrowser() {
                         mode: 'y',
                         callbacks: {
                             label: function(tooltipItem, data) {
+
                                 let label = data.labels[tooltipItem.index];
+
+                                if (tooltipItem.datasetIndex == 0)
+                                    label += " (spring)";
+                                else
+                                    label += " (fall)";
+
                                 let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                                 if (options.normalize)
                                     return normalizedTooltipCallback(label, value);
