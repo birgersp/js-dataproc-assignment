@@ -68,11 +68,17 @@ function TMTeacherBrowser() {
 
         let tableBody = createElement("tbody", table);
 
-        for (let key in attributeKeys) {
+        let createRowValue = (label, value) => {
             let tableBodyRow = createElement("tr", tableBody);
-            createElement("th", tableBodyRow, {innerHTML: attributeKeys[key], style: "width: 1%; white-space: nowrap;"});
-            createElement("td", tableBodyRow, {innerHTML: teacher[key]});
-        }
+            createElement("th", tableBodyRow, {innerHTML: label, style: "width: 1%; white-space: nowrap;"});
+            return  createElement("td", tableBodyRow, {innerHTML: value});
+        };
+
+        for (let key in attributeKeys)
+            createRowValue(attributeKeys[key], teacher[key]);
+
+        createRowValue("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
+        createRowValue("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
 
         teacherOverviewDiv.style.setProperty("display", "none");
         teacherDetailedView.style.setProperty("display", "block");

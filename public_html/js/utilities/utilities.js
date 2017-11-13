@@ -103,3 +103,7 @@ function setStyle(element, properties) {
         element.style.setProperty(key, properties[key]);
     }
 }
+
+function getIndexedAttribute(object, attributeIndex) {
+    return object[Object.keys(object)[attributeIndex]];
+}

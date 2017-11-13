@@ -44,9 +44,13 @@ function TMApp() {
         let teachers = self.dataProcessor.getTeachers();
         self.workloadBrowser.setTeacherData(teachers);
         self.teacherBrowser.setTeacherData(teachers);
+
+        // TODO: remove this
+        // Select the first teacher
+        selectTeacher(getIndexedAttribute(teachers, 0));
     }
 
-    function teacherSelected(teacher) {
+    function selectTeacher(teacher) {
         tabs.teachers.open();
         self.teacherBrowser.showTeacherDetails(teacher);
     }
@@ -63,7 +67,7 @@ function TMApp() {
             self.teacherBrowser.resetView();
         };
 
-        self.workloadBrowser.onTeacherSelected = teacherSelected;
+        self.workloadBrowser.onTeacherSelected = selectTeacher;
 
         self.workloadBrowser.container = tabs.workload.container;
         self.teacherBrowser.container = tabs.teachers.container;
@@ -73,9 +77,11 @@ function TMApp() {
         self.workloadBrowser.initialize();
         self.teacherBrowser.initialize();
 
-        self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
+        let semesterHoursLoaded = () => {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
-        });
+        };
+
+        self.dataProcessor.loadSemesterHours("data/hours.csv", semesterHoursLoaded);
     };
 }
 ;
