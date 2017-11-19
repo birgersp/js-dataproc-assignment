@@ -8,6 +8,7 @@ include("StudyProgram.js");
 include("Course.js");
 include("Teacher.js");
 include("TeacherBrowser.js");
+include("NotificationBrowser.js");
 
 function TMApp() {
 
@@ -22,8 +23,8 @@ function TMApp() {
     const COURSES_TAB_ID = "courses";
     const COURSES_TAB_LABEL = "Courses";
 
-    const INFO_TAB_ID = "info";
-    const INFO_TAB_LABEL = "Info";
+    const NOTIFICATIONS_TAB_ID = "info";
+    const NOTIFICATIONS_TAB_LABEL = "Info";
 
     const DEFAULT_ACTIVE_TAB = TEACHERS_TAB_ID;
 
@@ -33,17 +34,25 @@ function TMApp() {
     this.workloadBrowser = new TMWorkloadBrowser();
     this.dataProcessor = new TMDataProcessor();
     this.teacherBrowser = new TMTeacherBrowser();
+    this.notificationsBrowser = new TMNotificationBrowser();
 
     let tabs = {
         workload: null,
-        teachers: null
+        teachers: null,
+        courses: null,
+        info: null
     };
 
     function dataProcessed() {
 
         let teachers = self.dataProcessor.getTeachers();
         self.workloadBrowser.setTeacherData(teachers);
-        self.teacherBrowser.setTeacherData(teachers);
+        self.teacherBrowser.addTeachers(teachers);
+        self.notificationsBrowser.processTeachers(teachers);
+
+        let courses = self.dataProcessor.getCourses();
+        // TODO: set courses data for courses browser
+        self.notificationsBrowser.processCourses(courses);
     }
 
     function teacherSelected(teacher) {
@@ -57,21 +66,22 @@ function TMApp() {
         self.ui.initialize();
 
         tabs.workload = self.ui.createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
-        tabs.teachers = self.ui.createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
+        self.workloadBrowser.onTeacherSelected = teacherSelected;
+        self.workloadBrowser.container = tabs.workload.container;
+        self.workloadBrowser.initialize();
 
+        tabs.teachers = self.ui.createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
         tabs.teachers.onOpen = function() {
             self.teacherBrowser.resetView();
         };
-
-        self.workloadBrowser.onTeacherSelected = teacherSelected;
-
-        self.workloadBrowser.container = tabs.workload.container;
         self.teacherBrowser.container = tabs.teachers.container;
-        self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
-        self.ui.createTab(INFO_TAB_ID, INFO_TAB_LABEL);
-
-        self.workloadBrowser.initialize();
         self.teacherBrowser.initialize();
+
+
+        self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
+        self.ui.createTab(NOTIFICATIONS_TAB_ID, NOTIFICATIONS_TAB_LABEL);
+
+        self.notificationsBrowser.initialize();
 
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);

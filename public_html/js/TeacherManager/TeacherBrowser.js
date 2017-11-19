@@ -33,7 +33,7 @@ function TMTeacherBrowser() {
         teacherDetailedView.appendChild(warningHeader);
     };
 
-    this.setTeacherData = function(newTeachers) {
+    this.addTeachers = function(newTeachers) {
 
         teacherOverviewDiv.innerHTML = "";
 
