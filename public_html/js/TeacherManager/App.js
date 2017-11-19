@@ -77,14 +77,16 @@ function TMApp() {
         self.teacherBrowser.container = tabs.teachers.container;
         self.teacherBrowser.initialize();
 
-
         self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
-        self.ui.createTab(NOTIFICATIONS_TAB_ID, NOTIFICATIONS_TAB_LABEL);
 
+        tabs.info = self.ui.createTab(NOTIFICATIONS_TAB_ID, NOTIFICATIONS_TAB_LABEL);
+        self.notificationsBrowser.container = tabs.info.container;
         self.notificationsBrowser.initialize();
 
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
         });
+
+        tabs.info.open();
     };
 }
