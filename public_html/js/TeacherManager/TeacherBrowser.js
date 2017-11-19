@@ -1,3 +1,5 @@
+"use strict";
+
 function TMTeacherBrowser() {
 
     let self = this;
@@ -83,4 +85,3 @@ function TMTeacherBrowser() {
         teacherOverviewDiv.style.setProperty("display", "block");
     };
 }
-;

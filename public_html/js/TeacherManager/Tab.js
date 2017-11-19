@@ -1,3 +1,5 @@
+"use strict";
+
 function TMTab() {
 
     let tab = this;
@@ -15,4 +17,3 @@ function TMTab() {
         // Can be overriden
     };
 }
-;

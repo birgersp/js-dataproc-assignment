@@ -275,4 +275,3 @@ function TMWorkloadBrowser() {
         update();
     };
 }
-;

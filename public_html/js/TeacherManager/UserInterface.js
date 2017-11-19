@@ -105,4 +105,3 @@ function TMUserInterface() {
         return tab;
     };
 }
-;

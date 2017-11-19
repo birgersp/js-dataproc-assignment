@@ -80,4 +80,3 @@ function TMOptionsDropdown(container) {
         TMOptionsDropdown.checkboxes++;
     };
 }
-;

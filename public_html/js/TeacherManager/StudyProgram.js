@@ -6,4 +6,3 @@ function TMStudyProgram() {
     this.name = null;
     this.level = null;
 }
-;
