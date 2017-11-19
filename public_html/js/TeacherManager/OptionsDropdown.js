@@ -2,9 +2,6 @@
 
 include("../utilities/utilities.js");
 
-if (!window.TeacherManager)
-    window.TeacherManager = {};
-
 function TMOptionsDropdown(container) {
 
     let self = this;
@@ -82,4 +79,5 @@ function TMOptionsDropdown(container) {
 
         TMOptionsDropdown.checkboxes++;
     };
-};
+}
+;
