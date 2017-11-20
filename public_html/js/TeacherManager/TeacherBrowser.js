@@ -93,8 +93,11 @@ function TMTeacherBrowser() {
         listBrowser.addDetail("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
         listBrowser.addDetail("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
 
-        let springCoursesCell = listBrowser.createDetail("Courses, spring", "");
-        let springCoursesList = createElement("ul", springCoursesCell);
+        let springCoursesRow = listBrowser.createDetail("Courses, spring", "");
+        let springCoursesCell = createElement("td", springCoursesRow);
+        let springCoursesList = createElement("ul", springCoursesCell, {
+            style: "margin-bottom: 0px;"
+        });
 
         for (let courseID in teacher.courses) {
             let course = teacher.courses[courseID];
