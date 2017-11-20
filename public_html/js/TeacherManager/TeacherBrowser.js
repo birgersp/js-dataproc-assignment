@@ -85,6 +85,14 @@ function TMTeacherBrowser() {
 
     this.showTeacherDetails = function(teacher) {
 
+        listBrowser.clearDetails();
+
+        for (let key in attributeKeys)
+            listBrowser.addDetail(attributeKeys[key], teacher[key]);
+
+        listBrowser.addDetail("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
+        listBrowser.addDetail("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
+
         function addCourses(label, courses) {
 
             let coursesCell = listBrowser.createDetail(label);
@@ -107,14 +115,6 @@ function TMTeacherBrowser() {
                 });
             }
         }
-
-        listBrowser.clearDetails();
-
-        for (let key in attributeKeys)
-            listBrowser.addDetail(attributeKeys[key], teacher[key]);
-
-        listBrowser.addDetail("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
-        listBrowser.addDetail("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
 
         let springCourses = {};
         let fallCourses = {};
