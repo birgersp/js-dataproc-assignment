@@ -10,6 +10,10 @@ function TMListBrowser() {
 
     this.addList = function(label, tableHeaders) {
 
+        if (label) {
+            createElement("h4", self.container, {innerHTML: label});
+        }
+
         let table = createElement("table", self.container, {
             "class": "table table-striped table-hover"
         });
