@@ -99,12 +99,13 @@ function TMApp() {
         tabs.info = self.ui.createTab(NOTIFICATIONS_TAB_ID, NOTIFICATIONS_TAB_LABEL);
         self.notificationsBrowser.container = tabs.info.container;
         self.notificationsBrowser.onTeacherSelected = selectTeacher;
+        self.notificationsBrowser.onCourseSelected = selectCourse;
         self.notificationsBrowser.initialize();
 
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
         });
 
-        tabs.courses.open();
+        tabs.info.open();
     };
 }

@@ -8,6 +8,7 @@ function TMNotificationBrowser() {
     const MAXIMUM_WORKLOAD_PERCENTAGE = 100;
 
     let teacherNotificationList = null;
+    let courseNotificationList = null;
 
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
@@ -31,14 +32,31 @@ function TMNotificationBrowser() {
         });
     }
 
+    function addCourseNotification(course, notification) {
+
+        if (courseNotificationList.children.length == 0) {
+            createElement("h4", self.container, {innerHTML: "Courses"});
+            self.container.appendChild(courseNotificationList);
+        }
+
+        let listItem = createElement("li", courseNotificationList);
+        let link = createElement("a", listItem, {
+            innerHTML: notification,
+            href: "#"
+        });
+
+        link.addEventListener("click", () => {
+            self.onCourseSelected(course);
+        });
+    }
+
     this.initialize = function() {
 
         teacherNotificationList = createElement("ul");
+        courseNotificationList = createElement("ul");
     };
 
     this.processTeachers = function(teachers) {
-
-        // TODO: generate notifications for problems with list of teachers
 
         for (let teacherID in teachers) {
             let teacher = teachers[teacherID];
@@ -69,6 +87,10 @@ function TMNotificationBrowser() {
 
     this.processCourses = function(courses) {
 
-        // TODO: getnerate notifications for problems with list of courses
+        for (let courseID in courses) {
+            let course = courses[courseID];
+
+            addCourseNotification(course, "This course (bla bla bla)");
+        }
     };
 }
