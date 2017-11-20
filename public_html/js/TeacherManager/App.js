@@ -50,11 +50,18 @@ function TMApp() {
         let teachers = self.dataProcessor.getTeachers();
         self.workloadBrowser.setTeacherData(teachers);
         self.teacherBrowser.addTeachers(teachers);
-        self.notificationsBrowser.processTeachers(teachers);
+        self.courseBrowser.addTeachers(teachers);
+        self.notificationsBrowser.addTeachers(teachers);
 
         let courses = self.dataProcessor.getCourses();
         self.courseBrowser.addCourses(courses);
+        self.notificationsBrowser.addCourses(courses);
+
+        self.notificationsBrowser.processTeachers(teachers);
         self.notificationsBrowser.processCourses(courses);
+
+        // TODO: remove this
+        selectCourse(courses["b3-net"]);
     }
 
     function selectTeacher(teacher) {
@@ -105,7 +112,5 @@ function TMApp() {
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
         });
-
-        tabs.info.open();
     };
 }

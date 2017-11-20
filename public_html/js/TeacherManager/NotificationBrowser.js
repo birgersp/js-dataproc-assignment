@@ -14,6 +14,13 @@ function TMNotificationBrowser() {
     this.onTeacherSelected = function(teacher) {};
     this.onCourseSelected = function(course) {};
 
+    let teachers = {};
+    let courses = {};
+
+    let options = {
+        ignoreStudentAssistants: true
+    };
+
     function addTeacherNotification(teacher, notification) {
 
         if (teacherNotificationList.children.length == 0) {
@@ -56,7 +63,12 @@ function TMNotificationBrowser() {
         courseNotificationList = createElement("ul");
     };
 
-    this.processTeachers = function(teachers) {
+    this.addTeachers = function(newTeachers) {
+        for (let teacherID in newTeachers)
+            teachers[teacherID] = newTeachers[teacherID];
+    };
+
+    this.processTeachers = function() {
 
         for (let teacherID in teachers) {
             let teacher = teachers[teacherID];
@@ -85,13 +97,24 @@ function TMNotificationBrowser() {
         }
     };
 
-    this.processCourses = function(courses) {
+    this.addCourses = function(newCourses) {
+
+        for (let courseID in newCourses)
+            courses[courseID] = newCourses[courseID];
+    };
+
+    this.processCourses = function() {
 
         for (let courseID in courses) {
             let course = courses[courseID];
 
             let coverage = 0;
             for (let teacherID in course.teachingCoveredPercent) {
+
+                if (options.ignoreStudentAssistants && teachers[teacherID].isStudentAssistant) {
+                    continue;
+                }
+
                 coverage += course.teachingCoveredPercent[teacherID];
             }
 
