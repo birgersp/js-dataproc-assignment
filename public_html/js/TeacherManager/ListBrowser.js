@@ -62,13 +62,13 @@ function TMListBrowser() {
 
         let tableBodyRow = createElement("tr", detailsTableBody);
         createElement("th", tableBodyRow, {innerHTML: header, style: "width: 1%; white-space: nowrap;"});
-        return tableBodyRow;
+        return createElement("td", tableBodyRow);
     };
 
     this.addDetail = function(header, value) {
 
-        let row = self.createDetail(header);
-        createElement("td", row, {innerHTML: value});
+        let cell = self.createDetail(header);
+        cell.innerHTML = value;
     };
 
     this.enableDetailView = function() {
