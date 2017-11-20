@@ -55,9 +55,14 @@ function TMApp() {
         self.notificationsBrowser.processCourses(courses);
     }
 
-    function teacherSelected(teacher) {
+    function selectTeacher(teacher) {
         tabs.teachers.open();
         self.teacherBrowser.showTeacherDetails(teacher);
+    }
+
+    function selectCourse(course) {
+        // TODO: show course details
+        console.log(course);
     }
 
     this.start = function() {
@@ -65,15 +70,18 @@ function TMApp() {
         self.ui.appTitle = APP_TITLE;
         self.ui.initialize();
 
+        // Setup workload browser
         tabs.workload = self.ui.createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
-        self.workloadBrowser.onTeacherSelected = teacherSelected;
+        self.workloadBrowser.onTeacherSelected = selectTeacher;
         self.workloadBrowser.container = tabs.workload.container;
         self.workloadBrowser.initialize();
 
+        // Setup teacher browser tab
         tabs.teachers = self.ui.createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
         tabs.teachers.onOpen = function() {
             self.teacherBrowser.resetView();
         };
+        self.teacherBrowser.onCourseSelected = selectCourse;
         self.teacherBrowser.container = tabs.teachers.container;
         self.teacherBrowser.initialize();
 
@@ -81,7 +89,7 @@ function TMApp() {
 
         tabs.info = self.ui.createTab(NOTIFICATIONS_TAB_ID, NOTIFICATIONS_TAB_LABEL);
         self.notificationsBrowser.container = tabs.info.container;
-        self.notificationsBrowser.onTeacherSelected = teacherSelected;
+        self.notificationsBrowser.onTeacherSelected = selectTeacher;
         self.notificationsBrowser.initialize();
 
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
