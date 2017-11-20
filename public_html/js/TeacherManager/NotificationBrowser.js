@@ -90,7 +90,18 @@ function TMNotificationBrowser() {
         for (let courseID in courses) {
             let course = courses[courseID];
 
-            addCourseNotification(course, "This course (bla bla bla)");
+            let coverage = 0;
+            for (let teacherID in course.teachingCoveredPercent) {
+                coverage += course.teachingCoveredPercent[teacherID];
+            }
+
+            if (coverage < 100) {
+                addCourseNotification(course, course.name + " (" + course.id + ") has low coverage: " + coverage + "%");
+            }
+
+            if (coverage > 100) {
+                addCourseNotification(course, course.name + " (" + course.id + ") has high coverage: " + coverage + "%");
+            }
         }
     };
 }
