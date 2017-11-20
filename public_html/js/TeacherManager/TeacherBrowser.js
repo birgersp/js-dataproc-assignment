@@ -85,6 +85,29 @@ function TMTeacherBrowser() {
 
     this.showTeacherDetails = function(teacher) {
 
+        function addCourses(label, courses) {
+
+            let coursesCell = listBrowser.createDetail(label);
+            let coursesList = createElement("ul", coursesCell, {
+                style: "margin-bottom: 0px;"
+            });
+
+            for (let courseID in courses) {
+                let course = courses[courseID];
+
+                let coveragePercentage = course.teachingCoveredPercent[teacher.id];
+                let coverageHours = Math.round(coveragePercentage / 100 * course.teacherWorkloadHours);
+
+                let linkText = course.name + " (" + coverageHours + " hours)";
+
+                let listItem = createElement("li", coursesList);
+                let link = createElement("a", listItem, {href: "#", innerHTML: linkText});
+                link.addEventListener("click", () => {
+                    self.onCourseSelected(course);
+                });
+            }
+        }
+
         listBrowser.clearDetails();
 
         for (let key in attributeKeys)
@@ -93,20 +116,22 @@ function TMTeacherBrowser() {
         listBrowser.addDetail("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
         listBrowser.addDetail("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
 
-        let springCoursesCell = listBrowser.createDetail("Courses, spring", "");
-        let springCoursesList = createElement("ul", springCoursesCell, {
-            style: "margin-bottom: 0px;"
-        });
+        let springCourses = {};
+        let fallCourses = {};
 
         for (let courseID in teacher.courses) {
             let course = teacher.courses[courseID];
-            let courseName = course.name;
-            let listItem = createElement("li", springCoursesList);
-            let link = createElement("a", listItem, {href: "#", innerHTML: courseName});
-            link.addEventListener("click", () => {
-                self.onCourseSelected(course);
-            });
+            if (course.season === TMCourse.Season.SPRING)
+                springCourses[courseID] = course;
+            else
+                fallCourses[courseID] = course;
         }
+
+        if (Object.keys(springCourses).length > 0)
+            addCourses("Courses, spring", springCourses);
+
+        if (Object.keys(fallCourses).length > 0)
+            addCourses("Courses, fall", fallCourses);
 
         listBrowser.enableDetailView();
     };
