@@ -18,6 +18,8 @@ function TMTeacherBrowser() {
 
     this.container = null;
 
+    this.onCourseSelected = function(course) {};
+
     this.initialize = function() {
 
         let warningHeader = createElement("h4");
@@ -80,6 +82,19 @@ function TMTeacherBrowser() {
         createRowValue("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
         createRowValue("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
 
+        let springCoursesCell = createRowValue("Courses, spring", "");
+        let springCoursesList = createElement("ul", springCoursesCell);
+
+        for (let courseID in teacher.courses) {
+            let course = teacher.courses[courseID];
+            let courseName = course.name;
+            let listItem = createElement("li", springCoursesList);
+            let link = createElement("a", listItem, {href: "#", innerHTML: courseName});
+            link.addEventListener("click", () => {
+                self.onCourseSelected(course);
+            });
+        }
+
         teacherOverviewDiv.style.setProperty("display", "none");
         teacherDetailedView.style.setProperty("display", "block");
     };
@@ -89,4 +104,3 @@ function TMTeacherBrowser() {
         teacherOverviewDiv.style.setProperty("display", "block");
     };
 }
-;

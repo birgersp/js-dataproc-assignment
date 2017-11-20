@@ -55,6 +55,10 @@ function TMApp() {
         self.teacherBrowser.showTeacherDetails(teacher);
     }
 
+    function selectCourse(course) {
+        console.log(course);
+    }
+
     this.start = function() {
 
         self.ui.appTitle = APP_TITLE;
@@ -68,6 +72,7 @@ function TMApp() {
         };
 
         self.workloadBrowser.onTeacherSelected = selectTeacher;
+        self.teacherBrowser.onCourseSelected = selectCourse;
 
         self.workloadBrowser.container = tabs.workload.container;
         self.teacherBrowser.container = tabs.teachers.container;

@@ -27,8 +27,8 @@ function TMCourse() {
     this.numberOfStudents = null;
 
     // Allocated teacher hours
-    this.teacherWorkloadHours = null;
-};
+    this.teacher = null;
+}
 
 TMCourse.Season = {
     SPRING: 1,
