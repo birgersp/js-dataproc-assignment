@@ -90,6 +90,9 @@ function TMTeacherBrowser() {
         for (let key in attributeKeys)
             listBrowser.addDetail(attributeKeys[key], teacher[key]);
 
+        listBrowser.addDetail("Student assistant", teacher.isStudentAssistant);
+        listBrowser.addDetail("Is external", teacher.isExternal);
+
         listBrowser.addDetail("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
         listBrowser.addDetail("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
 
