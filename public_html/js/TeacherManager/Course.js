@@ -25,6 +25,9 @@ function TMCourse() {
 
     // Allocated teacher hours
     this.teacherWorkloadHours = null;
+
+    // Map of teacher (IDs) and number of hours covered by that teacher
+    this.teachingCoveredPercent = {};
 }
 
 TMCourse.Season = {

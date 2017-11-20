@@ -79,6 +79,10 @@ function TMDataProcessor() {
                 let teacher = teachers[teacherID];
                 let course = courses[courseID];
                 teacher.courses[courseID] = course;
+
+                if (course.teachingCoveredPercent[teacherID] == undefined)
+                    course.teachingCoveredPercent[teacherID] = 0;
+                course.teachingCoveredPercent[teacherID] += Number(sample["percent_course"]);
             }
         }
     }
