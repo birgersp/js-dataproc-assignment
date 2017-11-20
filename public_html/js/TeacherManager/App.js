@@ -9,6 +9,7 @@ include("Course.js");
 include("Teacher.js");
 include("TeacherBrowser.js");
 include("NotificationBrowser.js");
+include("CourseBrowser.js");
 
 function TMApp() {
 
@@ -35,6 +36,7 @@ function TMApp() {
     this.dataProcessor = new TMDataProcessor();
     this.teacherBrowser = new TMTeacherBrowser();
     this.notificationsBrowser = new TMNotificationBrowser();
+    this.courseBrowser = new TMCourseBrowser();
 
     let tabs = {
         workload: null,
@@ -51,7 +53,7 @@ function TMApp() {
         self.notificationsBrowser.processTeachers(teachers);
 
         let courses = self.dataProcessor.getCourses();
-        // TODO: set courses data for courses browser
+        self.courseBrowser.addCourses(courses);
         self.notificationsBrowser.processCourses(courses);
     }
 
@@ -85,7 +87,9 @@ function TMApp() {
         self.teacherBrowser.container = tabs.teachers.container;
         self.teacherBrowser.initialize();
 
-        self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
+        tabs.courses = self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
+        self.courseBrowser.container = tabs.courses.container;
+        self.courseBrowser.initialize();
 
         tabs.info = self.ui.createTab(NOTIFICATIONS_TAB_ID, NOTIFICATIONS_TAB_LABEL);
         self.notificationsBrowser.container = tabs.info.container;
@@ -96,6 +100,6 @@ function TMApp() {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
         });
 
-        tabs.teachers.open();
+        tabs.courses.open();
     };
 }

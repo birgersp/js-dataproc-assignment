@@ -24,8 +24,6 @@ function TMTeacherBrowser() {
 
     this.initialize = function() {
 
-        this.container.innerHTML = "";
-
         listBrowser = new TMListBrowser();
         listBrowser.container = self.container;
         listBrowser.initialize();
@@ -88,7 +86,6 @@ function TMTeacherBrowser() {
     this.showTeacherDetails = function(teacher) {
 
         listBrowser.clearDetails();
-        listBrowser.enableDetailView();
 
         for (let key in attributeKeys)
             listBrowser.addDetail(attributeKeys[key], teacher[key]);
@@ -108,6 +105,8 @@ function TMTeacherBrowser() {
                 self.onCourseSelected(course);
             });
         }
+
+        listBrowser.enableDetailView();
     };
 
     this.resetView = function() {
