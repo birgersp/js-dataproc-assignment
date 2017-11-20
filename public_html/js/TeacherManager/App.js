@@ -96,6 +96,6 @@ function TMApp() {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
         });
 
-        tabs.info.open();
+        tabs.teachers.open();
     };
 }

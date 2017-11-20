@@ -1,5 +1,7 @@
 "use strict";
 
+include("ListBrowser.js");
+
 function TMTeacherBrowser() {
 
     let self = this;
@@ -18,91 +20,120 @@ function TMTeacherBrowser() {
     let teacherDetailedView = null;
     let teachers = {};
 
+    let listBrowser = new TMListBrowser();
+
     this.container = null;
 
     this.onCourseSelected = function(course) {};
 
     this.initialize = function() {
 
-        let warningHeader = createElement("h4");
-        warningHeader.innerHTML = "Awaiting teacher data...";
-
         this.container.innerHTML = "";
-        teacherOverviewDiv = createElement("div", self.container);
-        teacherOverviewDiv.appendChild(warningHeader);
 
-        teacherDetailedView = createElement("div", self.container);
-        teacherDetailedView.appendChild(warningHeader);
+        listBrowser.container = self.container;
+        listBrowser.itemSelected = (id) => {
+            let teacher = teachers[id];
+            self.showTeacherDetails(teacher);
+        };
+
+//        teacherOverviewDiv = createElement("div", self.container);
+//        teacherOverviewDiv.appendChild(warningHeader);
+//
+//        teacherDetailedView = createElement("div", self.container);
+//        teacherDetailedView.appendChild(warningHeader);
+//
+//
     };
 
+    /**
+     *
+     * @param {TMTeacher[]} newTeachers
+     */
     this.addTeachers = function(newTeachers) {
 
-        teacherOverviewDiv.innerHTML = "";
+        let attributeHeaders = [];
+        for (let attributeKey in attributeKeys) {
+            attributeHeaders.push(attributeKeys[attributeKey]);
+        }
 
-        let table = createElement("table", teacherOverviewDiv, {
-            "class": "table table-striped table-hover"
-        });
-        let tableHead = createElement("thead", table);
-        let headRow = createElement("tr", tableHead);
+        function addTeachers(label, teachers) {
+            listBrowser.addList(label, attributeHeaders);
 
-        for (let key in attributeKeys)
-            createElement("th", headRow, {innerHTML: attributeKeys[key]});
+            for (let teacherID in teachers) {
+                let teacher = teachers[teacherID];
+                let attributeValues = [];
+                for (let attributeKey in attributeKeys) {
+                    attributeValues.push(teacher[attributeKey]);
+                }
+                listBrowser.addListItem(teacherID, attributeValues);
+            }
+        }
 
-        let tableBody = createElement("tbody", table);
+        let regularTeachers = {};
+        let studAssTeachers = {};
+        let externalTeachers = {};
 
         for (let teacherID in newTeachers) {
             let teacher = newTeachers[teacherID];
-            let tableBodyRow = createElement("tr", tableBody);
-            tableBodyRow.addEventListener("click", () => {
-                self.showTeacherDetails(teacher);
-            });
-            for (let key in attributeKeys)
-                createElement("td", tableBodyRow, {innerHTML: teacher[key]});
 
-            teachers[teacherID] = newTeachers[teacherID];
+            teachers[teacherID] = teacher;
+
+            if (teacher.isStudentAssistant)
+                studAssTeachers[teacherID] = teacher;
+            else //
+            if (teacher.isExternal)
+                externalTeachers[teacherID] = teacher;
+            else //
+                regularTeachers[teacherID] = teacher;
         }
+
+        addTeachers(null, regularTeachers);
+        addTeachers("Student Assistants", studAssTeachers);
+        addTeachers("External Teachers", externalTeachers);
     };
 
     this.showTeacherDetails = function(teacher) {
 
-        teacherDetailedView.innerHTML = "";
-        let table = createElement("table", teacherDetailedView, {
-            "class": "table table-striped table-hover"
-        });
+        console.log(teacher);
 
-        let tableBody = createElement("tbody", table);
-
-        let createRowValue = (label, value) => {
-            let tableBodyRow = createElement("tr", tableBody);
-            createElement("th", tableBodyRow, {innerHTML: label, style: "width: 1%; white-space: nowrap;"});
-            return  createElement("td", tableBodyRow, {innerHTML: value});
-        };
-
-        for (let key in attributeKeys)
-            createRowValue(attributeKeys[key], teacher[key]);
-
-        createRowValue("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
-        createRowValue("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
-
-        let springCoursesCell = createRowValue("Courses, spring", "");
-        let springCoursesList = createElement("ul", springCoursesCell);
-
-        for (let courseID in teacher.courses) {
-            let course = teacher.courses[courseID];
-            let courseName = course.name;
-            let listItem = createElement("li", springCoursesList);
-            let link = createElement("a", listItem, {href: "#", innerHTML: courseName});
-            link.addEventListener("click", () => {
-                self.onCourseSelected(course);
-            });
-        }
-
-        teacherOverviewDiv.style.setProperty("display", "none");
-        teacherDetailedView.style.setProperty("display", "block");
+//        teacherDetailedView.innerHTML = "";
+//        let table = createElement("table", teacherDetailedView, {
+//            "class": "table table-striped table-hover"
+//        });
+//
+//        let tableBody = createElement("tbody", table);
+//
+//        let createRowValue = (label, value) => {
+//            let tableBodyRow = createElement("tr", tableBody);
+//            createElement("th", tableBodyRow, {innerHTML: label, style: "width: 1%; white-space: nowrap;"});
+//            return  createElement("td", tableBodyRow, {innerHTML: value});
+//        };
+//
+//        for (let key in attributeKeys)
+//            createRowValue(attributeKeys[key], teacher[key]);
+//
+//        createRowValue("Workload, spring", teacher.workload.spring + " hours (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
+//        createRowValue("Workload, fall", teacher.workload.fall + " hours (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
+//
+//        let springCoursesCell = createRowValue("Courses, spring", "");
+//        let springCoursesList = createElement("ul", springCoursesCell);
+//
+//        for (let courseID in teacher.courses) {
+//            let course = teacher.courses[courseID];
+//            let courseName = course.name;
+//            let listItem = createElement("li", springCoursesList);
+//            let link = createElement("a", listItem, {href: "#", innerHTML: courseName});
+//            link.addEventListener("click", () => {
+//                self.onCourseSelected(course);
+//            });
+//        }
+//
+//        teacherOverviewDiv.style.setProperty("display", "none");
+//        teacherDetailedView.style.setProperty("display", "block");
     };
 
     this.resetView = function() {
-        teacherDetailedView.style.setProperty("display", "none");
-        teacherOverviewDiv.style.setProperty("display", "block");
+//        teacherDetailedView.style.setProperty("display", "none");
+//        teacherOverviewDiv.style.setProperty("display", "block");
     };
 }
