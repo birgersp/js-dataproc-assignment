@@ -25,8 +25,8 @@ function TMWorkloadBrowser() {
     const FALL_COLOR = "rgba(0,0,255,0.3)";
     const FALL_BORDER_COLOR = "rgba(0,0,255,1)";
 
-    const MEAN_LINE_COLOR = "rgba(255,0,0,0.3)";
     const MEAN_LINE_BODER_COLOR = "rgba(255,0,0,1)";
+    const FULL_LINE_BODER_COLOR = "rgba(0,0,255,1)";
 
     let self = this;
 
@@ -35,19 +35,29 @@ function TMWorkloadBrowser() {
     let warningHeader = null;
 
     let options = {
-        showStudAss: true,
-        showExternal: true,
+        showStudAss: false,
+        showExternal: false,
         showMean: true,
         normalize: false
     };
 
     let workloadChart = null;
-    let chartLine = {
+
+    let meanWorkloadLine = {
         enabled: options.showMean,
         targetValue: 0,
         color: MEAN_LINE_BODER_COLOR,
         label: "Mean workload"
     };
+
+    let fullWorkloadLine = {
+        enabled: options.normalize,
+        targetValue: 100,
+        color: FULL_LINE_BODER_COLOR,
+        label: ""
+    };
+
+    let verticalLines = [meanWorkloadLine, fullWorkloadLine];
 
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
@@ -126,7 +136,7 @@ function TMWorkloadBrowser() {
         }
 
         let meanWorkload = summedWorkload / 2 / activeTeachers.length;
-        chartLine.targetValue = meanWorkload;
+        meanWorkloadLine.targetValue = meanWorkload;
 
         function updateChartHeight(chart) {
 
@@ -141,7 +151,8 @@ function TMWorkloadBrowser() {
         updateChartHeight(workloadChart);
         workloadChart.update();
 
-        chartLine.enabled = options.showMean;
+        meanWorkloadLine.enabled = options.showMean;
+        fullWorkloadLine.enabled = options.normalize;
     }
 
     this.initialize = function() {
@@ -251,7 +262,7 @@ function TMWorkloadBrowser() {
                     },
                     maintainAspectRatio: false
                 },
-                verticalLine: chartLine
+                verticalLines: verticalLines
             });
 
             return chart;

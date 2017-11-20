@@ -3,12 +3,9 @@
  */
 
 const verticalLinePlugin = {
-    getLinePosition: function(chart) {
-        return chart.scales["x-axis-0"].getPixelForValue(chart.config.verticalLine.targetValue);
-    },
-    renderVerticalLine: function(chart, color, label) {
+    renderVerticalLine: function(chart, color, label, targetValue) {
 
-        const lineLeftOffset = this.getLinePosition(chart);
+        const lineLeftOffset = chart.scales["x-axis-0"].getPixelForValue(targetValue);
         const scale = chart.scales['y-axis-0'];
         const context = chart.chart.ctx;
 
@@ -27,11 +24,19 @@ const verticalLinePlugin = {
 
     afterDatasetsDraw: function(chart, easing) {
 
-        if (!chart.config.verticalLine)
-            return;
+        if (chart.config.verticalLine)
+            if (chart.config.verticalLine.enabled !== false) {
+                this.renderVerticalLine(chart, chart.config.verticalLine.color, chart.config.verticalLine.label, chart.config.verticalLine.targetValue);
+            }
 
-        if (chart.config.verticalLine.enabled !== false) {
-            this.renderVerticalLine(chart, chart.config.verticalLine.color, chart.config.verticalLine.label);
+        if (chart.config.verticalLines) {
+            for (let lineI in chart.config.verticalLines) {
+                let line = chart.config.verticalLines[lineI];
+
+                if (line.enabled !== false) {
+                    this.renderVerticalLine(chart, line.color, line.label, line.targetValue);
+                }
+            }
         }
     }
 };

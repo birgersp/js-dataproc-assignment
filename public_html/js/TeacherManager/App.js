@@ -59,9 +59,6 @@ function TMApp() {
 
         self.notificationsBrowser.processTeachers(teachers);
         self.notificationsBrowser.processCourses(courses);
-
-        // TODO: remove this
-        selectTeacher(getIndexedAttribute(teachers, 0));
     }
 
     function selectTeacher(teacher) {
