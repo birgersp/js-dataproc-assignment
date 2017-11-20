@@ -17,6 +17,8 @@ function TMCourseBrowser() {
         teacherWorkloadHours: "Teacher Workload Hours"
     };
 
+    let courses = {};
+
     this.container = null;
 
     this.initialize = function() {
@@ -26,6 +28,10 @@ function TMCourseBrowser() {
             attributeHeaders.push(courseAttributeKeys[attributeKey]);
 
         listBrowser.container = self.container;
+        listBrowser.itemSelected = (id) => {
+            let course = courses[id];
+            self.showCourseDetails(course);
+        };
         listBrowser.initialize();
         listBrowser.addList(null, attributeHeaders);
     };
@@ -34,6 +40,8 @@ function TMCourseBrowser() {
 
         for (let courseID in newCourses) {
             let course = newCourses[courseID];
+
+            courses[courseID] = course;
 
             let attributeValues = [];
             for (let attributeKey in courseAttributeKeys) {
@@ -56,6 +64,13 @@ function TMCourseBrowser() {
         listBrowser.clearDetails();
 
 
+
+        listBrowser.enableDetailView();
+    };
+
+    this.resetView = function() {
+
+        listBrowser.disableDetailView();
     };
 }
 

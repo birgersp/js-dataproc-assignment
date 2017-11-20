@@ -80,7 +80,7 @@ function TMApp() {
 
         // Setup teacher browser tab
         tabs.teachers = self.ui.createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
-        tabs.teachers.onOpen = function() {
+        tabs.teachers.onOpen = () => {
             self.teacherBrowser.resetView();
         };
         self.teacherBrowser.onCourseSelected = selectCourse;
@@ -88,6 +88,9 @@ function TMApp() {
         self.teacherBrowser.initialize();
 
         tabs.courses = self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
+        tabs.courses.onOpen = () => {
+            self.courseBrowser.resetView();
+        };
         self.courseBrowser.container = tabs.courses.container;
         self.courseBrowser.initialize();
 
