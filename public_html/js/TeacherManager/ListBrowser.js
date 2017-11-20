@@ -43,7 +43,7 @@ function TMListBrowser() {
 
     this.addListItem = function(id, values) {
 
-        let tableBodyRow = createElement("tr", listTableBody);
+        let tableBodyRow = createElement("tr", listTableBody, {"class": "clickable"});
         tableBodyRow.addEventListener("click", () => {
             self.itemSelected(id);
         });

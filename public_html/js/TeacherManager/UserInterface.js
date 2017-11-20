@@ -67,7 +67,7 @@ function TMUserInterface() {
 
         let style = document.createElement('style');
         style.type = 'text/css';
-        style.innerHTML = 'h4 { margin-left: 10px; margin-top: 40px; }';
+        style.innerHTML = 'h4 { margin-left: 10px; margin-top: 40px; } tr.clickable:hover {cursor: pointer}';
         document.getElementsByTagName('head')[0].appendChild(style);
 
         initialized = true;
