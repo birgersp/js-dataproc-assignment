@@ -47,6 +47,9 @@ function TMNotificationBrowser() {
 
             function checkWorkload(season) {
 
+                if (teacher.isExternal || teacher.isStudentAssistant)
+                    return;
+
                 let workloadPercentage = Math.round(teacher.workloadNormalized[season] * 100);
 
                 if (workloadPercentage > MAXIMUM_WORKLOAD_PERCENTAGE) {
