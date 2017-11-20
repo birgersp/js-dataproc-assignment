@@ -1,8 +1,5 @@
 "use strict";
 
-if (!window.TeacherManager)
-    window.TeacherManager = {};
-
 function TMCourse() {
 
     // ID
@@ -27,7 +24,7 @@ function TMCourse() {
     this.numberOfStudents = null;
 
     // Allocated teacher hours
-    this.teacher = null;
+    this.teacherWorkloadHours = null;
 }
 
 TMCourse.Season = {

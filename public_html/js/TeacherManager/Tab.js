@@ -1,5 +1,4 @@
-if (!window.TeacherManager)
-    window.TeacherManager = {};
+"use strict";
 
 function TMTab() {
 
@@ -17,4 +16,4 @@ function TMTab() {
     this.onOpen = function() {
         // Can be overriden
     };
-};
+}

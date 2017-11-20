@@ -183,4 +183,3 @@ function TMDataProcessor() {
         return teachers;
     };
 }
-;
