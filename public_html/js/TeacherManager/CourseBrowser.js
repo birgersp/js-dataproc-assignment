@@ -90,7 +90,10 @@ function TMCourseBrowser() {
             if (!teacher)
                 throw "Could not find teacher " + teacherID;
 
-            let entry = teacher.firstName + " " + teacher.lastName + " (" + course.teachingCoveredPercent[teacherID] + "%)";
+            let entry = teacher.firstName + " " + teacher.lastName + " (";
+            if (teacher.isStudentAssistant)
+                entry += "assistant, ";
+            entry += course.teachingCoveredPercent[teacherID] + "%)";
             let item = createElement("li", list);
             let link = createElement("a", item, {
                 href: "#",
