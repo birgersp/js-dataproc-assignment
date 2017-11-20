@@ -118,9 +118,16 @@ function TMDataProcessor() {
                 teacher.workload.fall += teacherCourseWorkload;
             }
         }
+
+        for (let teacherID in teachers) {
+            let teacher = teachers[teacherID];
+            teacher.workload.spring = Math.round(teacher.workload.spring);
+            teacher.workload.fall = Math.round(teacher.workload.fall);
+        }
     }
 
     function setTeacherWorkloadNormalized() {
+
         for (let teacherID in teachers) {
             let teacher = teachers[teacherID];
 
