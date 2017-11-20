@@ -2,19 +2,34 @@ function TMListBrowser() {
 
     let self = this;
 
-    let tableBody = null;
+    let listContainer = null;
+    let listTableBody = null;
+
+    let detailsContainer = null;
+    let detailsTableBody = null;
 
     this.container = null;
-
     this.itemSelected = function(id) {};
+
+    this.initialize = function() {
+
+        listContainer = createElement("div", self.container);
+        detailsContainer = createElement("div", self.container);
+
+        let table = createElement("table", detailsContainer, {
+            "class": "table table-striped table-hover"
+        });
+
+        detailsTableBody = createElement("tbody", table);
+    };
 
     this.addList = function(label, tableHeaders) {
 
         if (label) {
-            createElement("h4", self.container, {innerHTML: label});
+            createElement("h4", listContainer, {innerHTML: label});
         }
 
-        let table = createElement("table", self.container, {
+        let table = createElement("table", listContainer, {
             "class": "table table-striped table-hover"
         });
         let tableHead = createElement("thead", table);
@@ -23,12 +38,12 @@ function TMListBrowser() {
         for (let key in tableHeaders)
             createElement("th", headRow, {innerHTML: tableHeaders[key]});
 
-        tableBody = createElement("tbody", table);
+        listTableBody = createElement("tbody", table);
     };
 
     this.addListItem = function(id, values) {
 
-        let tableBodyRow = createElement("tr", tableBody);
+        let tableBodyRow = createElement("tr", listTableBody);
         tableBodyRow.addEventListener("click", () => {
             self.itemSelected(id);
         });
@@ -37,16 +52,34 @@ function TMListBrowser() {
             createElement("td", tableBodyRow, {innerHTML: values[key]});
     };
 
-    this.clearDetails = function() {};
+    this.clearDetails = function() {
+
+        while (detailsTableBody.hasChildNodes())
+            detailsTableBody.removeChild(detailsTableBody.lastChild);
+    };
 
     this.createDetail = function(header) {
 
+        let tableBodyRow = createElement("tr", detailsTableBody);
+        createElement("th", tableBodyRow, {innerHTML: header, style: "width: 1%; white-space: nowrap;"});
+        return tableBodyRow;
     };
 
     this.addDetail = function(header, value) {
 
+        let row = self.createDetail(header);
+        createElement("td", row, {innerHTML: value});
     };
 
-    this.enableDetailView = function() {};
-    this.disableDetailView = function() {};
+    this.enableDetailView = function() {
+
+        detailsContainer.style.setProperty("display", "block");
+        listContainer.style.setProperty("display", "none");
+    };
+
+    this.disableDetailView = function() {
+
+        detailsContainer.style.setProperty("display", "none");
+        listContainer.style.setProperty("display", "block");
+    };
 }
