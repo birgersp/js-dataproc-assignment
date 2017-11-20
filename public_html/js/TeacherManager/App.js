@@ -100,6 +100,7 @@ function TMApp() {
         tabs.courses.onOpen = () => {
             self.courseBrowser.resetView();
         };
+        self.courseBrowser.onTeacherSelected = selectTeacher;
         self.courseBrowser.container = tabs.courses.container;
         self.courseBrowser.initialize();
 

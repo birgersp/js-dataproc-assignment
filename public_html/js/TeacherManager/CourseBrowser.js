@@ -91,7 +91,14 @@ function TMCourseBrowser() {
                 throw "Could not find teacher " + teacherID;
 
             let entry = teacher.firstName + " " + teacher.lastName + " (" + course.teachingCoveredPercent[teacherID] + "%)";
-            createElement("li", list, {innerHTML: entry});
+            let item = createElement("li", list);
+            let link = createElement("a", item, {
+                href: "#",
+                innerHTML: entry
+            });
+            link.addEventListener("click", () => {
+                self.onTeacherSelected(teacher);
+            });
         }
 
         listBrowser.enableDetailView();
