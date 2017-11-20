@@ -84,6 +84,7 @@ function TMApp() {
         tabs.workload = self.ui.createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
         self.workloadBrowser.onTeacherSelected = selectTeacher;
         self.workloadBrowser.container = tabs.workload.container;
+        self.workloadBrowser.teacherValidator = teacherValidator;
         self.workloadBrowser.initialize();
 
         // Setup teacher browsing tab
