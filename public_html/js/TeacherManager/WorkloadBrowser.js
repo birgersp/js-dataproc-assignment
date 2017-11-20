@@ -91,6 +91,8 @@ function TMWorkloadBrowser() {
 
         activeTeachers = [];
 
+        workloadChart.data.datasets[0].fontColor = "white";
+
         workloadChart.data.datasets[0].data = [];
         workloadChart.data.datasets[1].data = [];
         workloadChart.data.labels = [];
@@ -166,7 +168,7 @@ function TMWorkloadBrowser() {
         dropdown.options = options;
         dropdown.onChange = update;
 
-        dropdown.addOption("showStudAss", "Show stud.ass.");
+        dropdown.addOption("showStudAss", "Show assistants");
         dropdown.addOption("showExternal", "Show external");
         dropdown.addOption("showMean", "Show mean");
         dropdown.addOption("normalize", "Normalize");
