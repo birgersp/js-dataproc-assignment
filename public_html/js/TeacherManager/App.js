@@ -58,13 +58,15 @@ function TMApp() {
     }
 
     function selectTeacher(teacher) {
+
         tabs.teachers.open();
         self.teacherBrowser.showTeacherDetails(teacher);
     }
 
     function selectCourse(course) {
-        // TODO: show course details
-        console.log(course);
+
+        tabs.courses.open();
+        self.courseBrowser.showCourseDetails(course);
     }
 
     this.start = function() {

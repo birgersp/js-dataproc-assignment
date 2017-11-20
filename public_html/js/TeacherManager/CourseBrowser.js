@@ -63,7 +63,16 @@ function TMCourseBrowser() {
 
         listBrowser.clearDetails();
 
+        for (let attributeKey in courseAttributeKeys) {
 
+            let value = course[attributeKey];
+            let key = courseAttributeKeys[attributeKey];
+            if (key === courseAttributeKeys.season) {
+                value = value == TMCourse.Season.SPRING ? "Spring" : "Fall";
+            }
+
+            listBrowser.addDetail(key, value);
+        }
 
         listBrowser.enableDetailView();
     };
