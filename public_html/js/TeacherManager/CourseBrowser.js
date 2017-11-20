@@ -18,8 +18,10 @@ function TMCourseBrowser() {
     };
 
     let courses = {};
+    let teachers = {};
 
     this.container = null;
+    this.onTeacherSelected = function(teacher) {};
 
     this.initialize = function() {
 
@@ -59,6 +61,13 @@ function TMCourseBrowser() {
         }
     };
 
+    this.addTeachers = function(newTeachers) {
+
+        for (let teacherID in newTeachers) {
+            teachers[teacherID] = newTeachers[teacherID];
+        }
+    };
+
     this.showCourseDetails = function(course) {
 
         listBrowser.clearDetails();
@@ -72,6 +81,17 @@ function TMCourseBrowser() {
             }
 
             listBrowser.addDetail(key, value);
+        }
+
+        let coverageCell = listBrowser.createDetail("Teachers");
+        let list = createElement("ul", coverageCell);
+        for (let teacherID in course.teachingCoveredPercent) {
+            let teacher = teachers[teacherID];
+            if (!teacher)
+                throw "Could not find teacher " + teacherID;
+
+            let entry = teacher.firstName + " " + teacher.lastName + " (" + course.teachingCoveredPercent[teacherID] + "%)";
+            createElement("li", list, {innerHTML: entry});
         }
 
         listBrowser.enableDetailView();
