@@ -65,6 +65,11 @@ function TMUserInterface() {
         navBarList = createElement("ul", navBarButtonsDiv, {"class": "nav navbar-nav"});
         navBarContentContainer = createElement("div", container, {"class": "tab-content"});
 
+        let style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = 'h4 { margin-left: 10px; margin-top: 40px; }';
+        document.getElementsByTagName('head')[0].appendChild(style);
+
         initialized = true;
     };
 
