@@ -4,15 +4,15 @@ function TMNotificationBrowser() {
 
     let self = this;
 
-    const MINIMUM_WORKLOAD_PERCENTAGE = 25;
-    const MAXIMUM_WORKLOAD_PERCENTAGE = 100;
-
     let teacherNotificationList = null;
     let courseNotificationList = null;
 
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
     this.onCourseSelected = function(course) {};
+
+    /** @type {TeacherValidator} */
+    this.teacherValidator = null;
 
     let teachers = {};
     let courses = {};
@@ -82,12 +82,12 @@ function TMNotificationBrowser() {
 
                 let workloadPercentage = Math.round(teacher.workloadNormalized[season] * 100);
 
-                if (workloadPercentage > MAXIMUM_WORKLOAD_PERCENTAGE) {
+                if (workloadPercentage > self.teacherValidator.maximumWorkloadPercent) {
                     let notification = name + " has a high workload during the " + season + " semester: " + workloadPercentage + "%";
                     addTeacherNotification(teacher, notification);
                 }
 
-                if (workloadPercentage < MINIMUM_WORKLOAD_PERCENTAGE) {
+                if (workloadPercentage < self.teacherValidator.minimumWorkloadPercent) {
                     let notification = name + " has a low workload during the " + season + " semester: " + workloadPercentage + "%";
                     addTeacherNotification(teacher, notification);
                 }

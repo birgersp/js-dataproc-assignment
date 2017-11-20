@@ -10,6 +10,7 @@ include("Teacher.js");
 include("TeacherBrowser.js");
 include("NotificationBrowser.js");
 include("CourseBrowser.js");
+include("TeacherValidator.js");
 
 function TMApp() {
 
@@ -30,6 +31,7 @@ function TMApp() {
     const DEFAULT_ACTIVE_TAB = TEACHERS_TAB_ID;
 
     let self = this;
+    let teacherValidator = new TMTeacherValidator();
 
     this.ui = new TMUserInterface();
     this.workloadBrowser = new TMWorkloadBrowser();
@@ -84,7 +86,7 @@ function TMApp() {
         self.workloadBrowser.container = tabs.workload.container;
         self.workloadBrowser.initialize();
 
-        // Setup teacher browser tab
+        // Setup teacher browsing tab
         tabs.teachers = self.ui.createTab(TEACHERS_TAB_ID, TEACHERS_TAB_LABEL);
         tabs.teachers.onOpen = () => {
             self.teacherBrowser.resetView();
@@ -93,6 +95,7 @@ function TMApp() {
         self.teacherBrowser.container = tabs.teachers.container;
         self.teacherBrowser.initialize();
 
+        // Setup course browsing tab
         tabs.courses = self.ui.createTab(COURSES_TAB_ID, COURSES_TAB_LABEL);
         tabs.courses.onOpen = () => {
             self.courseBrowser.resetView();
@@ -101,10 +104,12 @@ function TMApp() {
         self.courseBrowser.container = tabs.courses.container;
         self.courseBrowser.initialize();
 
+        // Setup info tab
         tabs.info = self.ui.createTab(NOTIFICATIONS_TAB_ID, NOTIFICATIONS_TAB_LABEL);
         self.notificationsBrowser.container = tabs.info.container;
         self.notificationsBrowser.onTeacherSelected = selectTeacher;
         self.notificationsBrowser.onCourseSelected = selectCourse;
+        self.notificationsBrowser.teacherValidator = teacherValidator;
         self.notificationsBrowser.initialize();
 
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
