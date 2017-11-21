@@ -22,6 +22,9 @@ function TMTeacherBrowser() {
 
     this.onCourseSelected = function(course) {};
 
+    /** @type {TMDataValidator} */
+    this.dataValidator = null;
+
     this.initialize = function() {
 
         listBrowser = new TMListBrowser();
@@ -99,9 +102,7 @@ function TMTeacherBrowser() {
         function addCourses(label, courses) {
 
             let coursesCell = listBrowser.createDetail(label);
-            let coursesList = createElement("ul", coursesCell, {
-                style: "margin-bottom: 0px;"
-            });
+            let coursesList = createElement("ul", coursesCell);
 
             for (let courseID in courses) {
                 let course = courses[courseID];
@@ -135,6 +136,36 @@ function TMTeacherBrowser() {
 
         if (Object.keys(fallCourses).length > 0)
             addCourses("Courses, fall", fallCourses);
+
+        let notifications = [];
+
+        let getWorkloadPercentage = (season) => {
+            return Math.round(teacher.workloadNormalized[season] * 100);
+        };
+
+        let validateBelowThreshold = (season) => {
+            if (!self.dataValidator.teacherHasWorkloadBelowThreshold(teacher, season))
+                notifications.push("Workload (" + season + ") is too high (" + getWorkloadPercentage(season) + "%)");
+        };
+
+        let validateAboveThreshold = (season) => {
+            if (!self.dataValidator.teacherHasWorkloadAboveThreshold(teacher, season))
+                notifications.push("Workload (" + season + ") is too low (" + getWorkloadPercentage(season) + "%)");
+        };
+
+        validateBelowThreshold(TMCourse.Season.SPRING);
+        validateBelowThreshold(TMCourse.Season.FALL);
+
+        validateAboveThreshold(TMCourse.Season.SPRING);
+        validateAboveThreshold(TMCourse.Season.FALL);
+
+        if (notifications.length > 0) {
+            let notificationsCell = listBrowser.createDetail("Remarks");
+            let list = createElement("ul", notificationsCell);
+
+            for (let i in notifications)
+                createElement("li", list, {innerHTML: notifications[i], style: "color: red"});
+        }
 
         listBrowser.enableDetailView();
     };
