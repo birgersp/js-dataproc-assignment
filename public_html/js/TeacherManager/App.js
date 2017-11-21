@@ -39,7 +39,7 @@ function TMApp() {
     this.notificationsBrowser = new TMNotificationBrowser();
     this.courseBrowser = new TMCourseBrowser();
 
-    let teacherValidator = new TMDataValidator();
+    let dataValidator = new TMDataValidator();
 
     let tabs = {
         workload: null,
@@ -63,7 +63,10 @@ function TMApp() {
         self.notificationsBrowser.processTeachers(teachers);
         self.notificationsBrowser.processCourses(courses);
 
-        selectTeacher(getIndexedAttribute(teachers, 0));
+        // TODO: remove this
+        setTimeout(() => {
+            selectTeacher(getIndexedAttribute(teachers, 0));
+        }, 0);
     }
 
     function selectTeacher(teacher) {
@@ -87,7 +90,7 @@ function TMApp() {
         tabs.workload = self.ui.createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
         self.workloadBrowser.onTeacherSelected = selectTeacher;
         self.workloadBrowser.container = tabs.workload.container;
-        self.workloadBrowser.teacherValidator = teacherValidator;
+        self.workloadBrowser.teacherValidator = dataValidator;
         self.workloadBrowser.initialize();
 
         // Setup teacher browsing tab
@@ -97,6 +100,7 @@ function TMApp() {
         };
         self.teacherBrowser.onCourseSelected = selectCourse;
         self.teacherBrowser.container = tabs.teachers.container;
+        self.teacherBrowser.dataValidator = dataValidator;
         self.teacherBrowser.initialize();
 
         // Setup course browsing tab
@@ -113,7 +117,7 @@ function TMApp() {
         self.notificationsBrowser.container = tabs.info.container;
         self.notificationsBrowser.onTeacherSelected = selectTeacher;
         self.notificationsBrowser.onCourseSelected = selectCourse;
-        self.notificationsBrowser.teacherValidator = teacherValidator;
+        self.notificationsBrowser.teacherValidator = dataValidator;
         self.notificationsBrowser.initialize();
 
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
