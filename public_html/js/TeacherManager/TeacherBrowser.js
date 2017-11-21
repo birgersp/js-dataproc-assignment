@@ -40,8 +40,8 @@ function TMTeacherBrowser() {
             attributeHeaders.push(attributeKeys[attributeKey]);
         }
 
-        attributeHeaders.push("Spring workload [hours]");
-        attributeHeaders.push("Fall workload [hours]");
+        attributeHeaders.push("Spring workload");
+        attributeHeaders.push("Fall workload");
 
         function addTeachers(label, teachers) {
             listBrowser.addList(label, attributeHeaders);
@@ -53,8 +53,8 @@ function TMTeacherBrowser() {
                     attributeValues.push(teacher[attributeKey]);
                 }
 
-                attributeValues.push(teacher.workload.spring);
-                attributeValues.push(teacher.workload.fall);
+                attributeValues.push(teacher.workload.spring + "h (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
+                attributeValues.push(teacher.workload.fall + "h (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
 
                 listBrowser.addListItem(teacherID, attributeValues);
             }
