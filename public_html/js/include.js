@@ -1,9 +1,4 @@
 /**
- * include.js
- * By Birger Skogeng Pedersen (birgersp)
- */
-
-/**
  * Adds a single file to be included.
  * @param {String} path A relative path to a script.
  */
@@ -22,7 +17,7 @@ function include(path) {
  * Adds an array of files to be included.
  * @param {String} paths An array of relative paths to scripts.
  */
-include.all = function (paths) {
+include.all = function(paths) {
 
     for (let i in paths)
         include(paths[i]);
@@ -34,18 +29,18 @@ include.all = function (paths) {
  * @param {Function} onSuccess Callback invoked if script is loaded
  * @param {Function} onFail Callback invoked if script failed to load
  */
-include.loadScript = function (url, onSuccess, onFail) {
+include.loadScript = function(url, onSuccess, onFail) {
 
     var element = document.createElement("script");
     element.setAttribute("src", url);
 
     if (onSuccess)
-        element.onload = function () {
+        element.onload = function() {
             onSuccess();
         };
 
     if (onFail)
-        element.onerror = function (evt) {
+        element.onerror = function(evt) {
             onFail();
         };
 
@@ -69,7 +64,7 @@ include.currentInitiator = "";
 include.prefix = "";
 
 // Initialize and start including
-window.addEventListener("load", function () {
+window.addEventListener("load", function() {
 
     var mainScript;
     var scriptElements = document.getElementsByTagName("script");
