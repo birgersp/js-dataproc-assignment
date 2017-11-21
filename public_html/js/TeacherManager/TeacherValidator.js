@@ -7,6 +7,9 @@ function TMTeacherValidator() {
 
     this.validate = function(teacher) {
 
+        if (teacher.isExternal || teacher.isStudentAssistant)
+            return true;
+
         if (teacher.workloadNormalized.spring * 100 > self.maximumWorkloadPercent)
             return false;
 

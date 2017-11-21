@@ -106,13 +106,14 @@ function TMWorkloadBrowser() {
         for (let index in sortedTeachers) {
 
             let teacher = sortedTeachers[index];
-            activeTeachers.push(teacher);
 
             if (teacher.isExternal && !options.showExternal)
                 continue;
 
             if (teacher.isStudentAssistant && !options.showStudAss)
                 continue;
+
+            activeTeachers.push(teacher);
 
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
             let mark = self.teacherValidator.validate(teacher) ? "" : " (!)";
