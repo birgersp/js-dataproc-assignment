@@ -31,6 +31,6 @@ function TMCourse() {
 }
 
 TMCourse.Season = {
-    SPRING: 1,
-    FALL: 2
+    SPRING: "spring",
+    FALL: "fall"
 };
