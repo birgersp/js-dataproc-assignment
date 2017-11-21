@@ -10,7 +10,7 @@ include("Teacher.js");
 include("TeacherBrowser.js");
 include("NotificationBrowser.js");
 include("CourseBrowser.js");
-include("TeacherValidator.js");
+include("DataValidator.js");
 
 function TMApp() {
 
@@ -31,7 +31,6 @@ function TMApp() {
     const DEFAULT_ACTIVE_TAB = TEACHERS_TAB_ID;
 
     let self = this;
-    let teacherValidator = new TMTeacherValidator();
 
     this.ui = new TMUserInterface();
     this.workloadBrowser = new TMWorkloadBrowser();
@@ -39,6 +38,8 @@ function TMApp() {
     this.teacherBrowser = new TMTeacherBrowser();
     this.notificationsBrowser = new TMNotificationBrowser();
     this.courseBrowser = new TMCourseBrowser();
+
+    let teacherValidator = new TMDataValidator();
 
     let tabs = {
         workload: null,
@@ -61,6 +62,8 @@ function TMApp() {
 
         self.notificationsBrowser.processTeachers(teachers);
         self.notificationsBrowser.processCourses(courses);
+
+        selectTeacher(getIndexedAttribute(teachers, 0));
     }
 
     function selectTeacher(teacher) {

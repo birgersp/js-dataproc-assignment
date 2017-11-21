@@ -80,12 +80,12 @@ function TMNotificationBrowser() {
                 if (teacher.isExternal || teacher.isStudentAssistant)
                     return;
 
-                if (!self.teacherValidator.hasWorkloadBelowThreshold(teacher, season)) {
+                if (!self.teacherValidator.teacherHasWorkloadBelowThreshold(teacher, season)) {
                     let notification = name + " has a high workload during the " + season + " semester: " + Math.round(teacher.workloadNormalized[season] * 100) + "%";
                     addTeacherNotification(teacher, notification);
                 }
 
-                if (!self.teacherValidator.hasWorkloadAboveThreshold(teacher, season)) {
+                if (!self.teacherValidator.teacherHasWorkloadAboveThreshold(teacher, season)) {
                     let notification = name + " has a low workload during the " + season + " semester: " + Math.round(teacher.workloadNormalized[season] * 100) + "%";
                     addTeacherNotification(teacher, notification);
                 }
