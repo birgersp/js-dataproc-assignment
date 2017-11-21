@@ -65,7 +65,7 @@ function TMApp() {
 
         // TODO: remove this
         setTimeout(() => {
-            selectTeacher(getIndexedAttribute(teachers, 0));
+            selectCourse(getIndexedAttribute(courses, 0));
         }, 0);
     }
 

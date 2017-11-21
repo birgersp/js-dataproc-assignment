@@ -40,8 +40,31 @@ function TMCourseBrowser() {
 
     this.addCourses = function(newCourses) {
 
+        let sortedCourses = [];
         for (let courseID in newCourses) {
             let course = newCourses[courseID];
+
+            // Determine index according to first letter in name (sorting alphabetically)
+            let courseNameCharCode = course.name.charCodeAt(0);
+            let found = false;
+            let index = 0;
+            while (!found) {
+                if (index >= sortedCourses.length) {
+                    index = sortedCourses.length;
+                    found = true;
+                } else {
+                    if (sortedCourses[index].name.charCodeAt(0) > courseNameCharCode)
+                        found = true;
+                    else
+                        index++;
+                }
+            }
+            sortedCourses.splice(index, 0, course);
+        }
+
+        for (let courseIndex in sortedCourses) {
+            let course = sortedCourses[courseIndex];
+            let courseID = course.id;
 
             courses[courseID] = course;
 
