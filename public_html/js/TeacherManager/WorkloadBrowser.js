@@ -62,8 +62,8 @@ function TMWorkloadBrowser() {
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
 
-    /** @type TMTeacherValidator */
-    this.teacherValidator = null;
+    /** @type TMDataValidator */
+    this.dataValidator = null;
 
     let defaultTooltipCallback = (label, value) => {
         return label + ': ' + value + ' hours';
@@ -116,7 +116,7 @@ function TMWorkloadBrowser() {
             activeTeachers.push(teacher);
 
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
-            let mark = self.teacherValidator.validateTeacher(teacher) ? "" : " (!)";
+            let mark = self.dataValidator.validateTeacher(teacher) ? "" : " (!)";
 
             workloadChart.data.labels.push(teacherName + mark);
 

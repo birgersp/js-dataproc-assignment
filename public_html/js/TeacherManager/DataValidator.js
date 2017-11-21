@@ -5,6 +5,14 @@ function TMDataValidator() {
     this.minimumWorkloadPercent = 25;
     this.maximumWorkloadPercent = 100;
 
+    this.getCourseCoverage = function(course) {
+
+        let coverage = 0;
+        for (let teacherID in course.teachingCoveredPercent)
+            coverage += course.teachingCoveredPercent[teacherID];
+        return coverage;
+    };
+
     this.teacherHasWorkloadAboveThreshold = function(teacher, season) {
 
         if ((!teacher.isExternal) && (!teacher.isStudentAssistant))
@@ -39,6 +47,27 @@ function TMDataValidator() {
             return false;
 
         if (!self.teacherHasWorkloadBelowThreshold(teacher, TMCourse.Season.FALL))
+            return false;
+
+        return true;
+    };
+
+    this.courseCoverageAboveThreshold = function(course) {
+
+        return self.getCourseCoverage(course) > 0;
+    };
+
+    this.courseCoverageBelowThreshold = function(course) {
+
+        return self.getCourseCoverage(course) == 100;
+    };
+
+    this.validateCourse = function(course) {
+
+        if (!self.courseCoverageAboveThreshold(course))
+            return false;
+
+        if (!self.courseCoverageBelowThreshold(course))
             return false;
 
         return true;

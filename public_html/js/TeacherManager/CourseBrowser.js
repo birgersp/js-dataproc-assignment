@@ -23,6 +23,9 @@ function TMCourseBrowser() {
     this.container = null;
     this.onTeacherSelected = function(teacher) {};
 
+    /** @type {TMDataValidator} */
+    this.dataValidator = null;
+
     this.initialize = function() {
 
         let attributeHeaders = [];
@@ -106,8 +109,7 @@ function TMCourseBrowser() {
             listBrowser.addDetail(key, value);
         }
 
-        let coverageCell = listBrowser.createDetail("Teachers");
-        let list = createElement("ul", coverageCell);
+        let teacherEntries = [];
         for (let teacherID in course.teachingCoveredPercent) {
             let teacher = teachers[teacherID];
             if (!teacher)
@@ -117,14 +119,45 @@ function TMCourseBrowser() {
             if (teacher.isStudentAssistant)
                 entry += "assistant, ";
             entry += course.teachingCoveredPercent[teacherID] + "%)";
-            let item = createElement("li", list);
-            let link = createElement("a", item, {
-                href: "#",
-                innerHTML: entry
-            });
-            link.addEventListener("click", () => {
-                self.onTeacherSelected(teacher);
-            });
+
+            teacherEntries.push(entry);
+        }
+
+        let remarks = [];
+
+        if (teacherEntries.length > 0) {
+            let coverageCell = listBrowser.createDetail("Teachers");
+            let list = createElement("ul", coverageCell);
+
+            for (let entryI in teacherEntries) {
+                let entry = teacherEntries[entryI];
+                let item = createElement("li", list);
+                let link = createElement("a", item, {
+                    href: "#",
+                    innerHTML: entry
+                });
+                link.addEventListener("click", () => {
+                    self.onTeacherSelected(teacher);
+                });
+            }
+
+            if (!self.dataValidator.courseCoverageAboveThreshold(course)) {
+                remarks.push("Coverage is too high (" + self.dataValidator.getCourseCoverage(course) + "%)");
+            } else
+            if (!self.dataValidator.courseCoverageBelowThreshold(course)) {
+                remarks.push("Coverage is too low (" + self.dataValidator.getCourseCoverage(course) + "%)");
+            }
+        } else
+            remarks.push("No teachers covering this course");
+
+        if (remarks.length > 0) {
+            let cell = listBrowser.createDetail("Remarks");
+            let list = createElement("ul", cell);
+
+            for (let remarkI in remarks) {
+                let remark = remarks[remarkI];
+                createElement("li", list, {innerHTML: remark, style: "color:red;"});
+            }
         }
 
         listBrowser.enableDetailView();

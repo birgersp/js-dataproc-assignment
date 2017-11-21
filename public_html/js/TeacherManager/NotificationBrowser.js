@@ -12,7 +12,7 @@ function TMNotificationBrowser() {
     this.onCourseSelected = function(course) {};
 
     /** @type {TeacherValidator} */
-    this.teacherValidator = null;
+    this.dataValidator = null;
 
     let teachers = {};
     let courses = {};
@@ -80,12 +80,12 @@ function TMNotificationBrowser() {
                 if (teacher.isExternal || teacher.isStudentAssistant)
                     return;
 
-                if (!self.teacherValidator.teacherHasWorkloadBelowThreshold(teacher, season)) {
+                if (!self.dataValidator.teacherHasWorkloadBelowThreshold(teacher, season)) {
                     let notification = name + " has a high workload during the " + season + " semester: " + Math.round(teacher.workloadNormalized[season] * 100) + "%";
                     addTeacherNotification(teacher, notification);
                 }
 
-                if (!self.teacherValidator.teacherHasWorkloadAboveThreshold(teacher, season)) {
+                if (!self.dataValidator.teacherHasWorkloadAboveThreshold(teacher, season)) {
                     let notification = name + " has a low workload during the " + season + " semester: " + Math.round(teacher.workloadNormalized[season] * 100) + "%";
                     addTeacherNotification(teacher, notification);
                 }

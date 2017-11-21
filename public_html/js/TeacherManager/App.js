@@ -90,7 +90,7 @@ function TMApp() {
         tabs.workload = self.ui.createTab(WORKLOAD_TAB_ID, WORKLOAD_TAB_LABEL);
         self.workloadBrowser.onTeacherSelected = selectTeacher;
         self.workloadBrowser.container = tabs.workload.container;
-        self.workloadBrowser.teacherValidator = dataValidator;
+        self.workloadBrowser.dataValidator = dataValidator;
         self.workloadBrowser.initialize();
 
         // Setup teacher browsing tab
@@ -110,6 +110,7 @@ function TMApp() {
         };
         self.courseBrowser.onTeacherSelected = selectTeacher;
         self.courseBrowser.container = tabs.courses.container;
+        self.courseBrowser.dataValidator = dataValidator;
         self.courseBrowser.initialize();
 
         // Setup info tab
@@ -117,7 +118,7 @@ function TMApp() {
         self.notificationsBrowser.container = tabs.info.container;
         self.notificationsBrowser.onTeacherSelected = selectTeacher;
         self.notificationsBrowser.onCourseSelected = selectCourse;
-        self.notificationsBrowser.teacherValidator = dataValidator;
+        self.notificationsBrowser.dataValidator = dataValidator;
         self.notificationsBrowser.initialize();
 
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
