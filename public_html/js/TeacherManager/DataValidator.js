@@ -62,7 +62,7 @@ function TMDataValidator() {
         return self.getCourseCoverage(course) == 100;
     };
 
-    this.validateCourse = function(course) {
+    this.validateCourseCoverage = function(course) {
 
         if (!self.courseCoverageAboveThreshold(course))
             return false;

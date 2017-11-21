@@ -54,7 +54,7 @@ function TMListBrowser() {
     this.addListValue = function(value, markRed) {
         let cell = createElement("td", tableBodyRow, {innerHTML: value});
         if (markRed === true) {
-            cell.setAttribute("style", "color:red");
+            cell.setAttribute("style", "color:red; font-weight:bold;");
         }
     };
 

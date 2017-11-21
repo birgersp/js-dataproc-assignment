@@ -32,6 +32,8 @@ function TMCourseBrowser() {
         for (let attributeKey in courseAttributeKeys)
             attributeHeaders.push(courseAttributeKeys[attributeKey]);
 
+        attributeHeaders.push("Coverage");
+
         listBrowser.container = self.container;
         listBrowser.itemSelected = (id) => {
             let course = courses[id];
@@ -69,9 +71,10 @@ function TMCourseBrowser() {
             let course = sortedCourses[courseIndex];
             let courseID = course.id;
 
+            listBrowser.addListRow(courseID);
+
             courses[courseID] = course;
 
-            let attributeValues = [];
             for (let attributeKey in courseAttributeKeys) {
 
                 let value = course[attributeKey];
@@ -80,10 +83,11 @@ function TMCourseBrowser() {
                 if (key === courseAttributeKeys.season) {
                     value = value == TMCourse.Season.SPRING ? "Spring" : "Fall";
                 }
-                attributeValues.push(value);
+                listBrowser.addListValue(value);
             }
 
-            listBrowser.addListItem(courseID, attributeValues);
+            let coverage = self.dataValidator.getCourseCoverage(course);
+            listBrowser.addListValue(coverage, !self.dataValidator.validateCourseCoverage(course));
         }
     };
 

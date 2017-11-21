@@ -62,11 +62,6 @@ function TMApp() {
 
         self.notificationsBrowser.processTeachers(teachers);
         self.notificationsBrowser.processCourses(courses);
-
-        // TODO: remove this
-        setTimeout(() => {
-            tabs.teachers.open();
-        }, 0);
     }
 
     function selectTeacher(teacher) {
