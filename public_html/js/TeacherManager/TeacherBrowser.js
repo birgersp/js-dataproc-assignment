@@ -50,16 +50,24 @@ function TMTeacherBrowser() {
             listBrowser.addList(label, attributeHeaders);
 
             for (let teacherID in teachers) {
+
+                listBrowser.addListRow(teacherID);
+
                 let teacher = teachers[teacherID];
                 let attributeValues = [];
                 for (let attributeKey in attributeKeys) {
-                    attributeValues.push(teacher[attributeKey]);
+                    listBrowser.addListValue(teacher[attributeKey]);
                 }
 
-                attributeValues.push(teacher.workload.spring + "h (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)");
-                attributeValues.push(teacher.workload.fall + "h (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)");
+                let springWorkloadValid =
+                        self.dataValidator.teacherHasWorkloadBelowThreshold(teacher, TMCourse.Season.SPRING) &&
+                        self.dataValidator.teacherHasWorkloadAboveThreshold(teacher, TMCourse.Season.SPRING);
+                listBrowser.addListValue(teacher.workload.spring + "h (" + Math.round(teacher.workloadNormalized.spring * 100) + "%)", !springWorkloadValid);
 
-                listBrowser.addListItem(teacherID, attributeValues);
+                let fallWorkloadValid =
+                        self.dataValidator.teacherHasWorkloadBelowThreshold(teacher, TMCourse.Season.FALL) &&
+                        self.dataValidator.teacherHasWorkloadAboveThreshold(teacher, TMCourse.Season.FALL);
+                listBrowser.addListValue(teacher.workload.fall + "h (" + Math.round(teacher.workloadNormalized.fall * 100) + "%)", !fallWorkloadValid);
             }
         }
 

@@ -109,28 +109,28 @@ function TMCourseBrowser() {
             listBrowser.addDetail(key, value);
         }
 
-        let teacherEntries = [];
+        let coveringTeachers = [];
         for (let teacherID in course.teachingCoveredPercent) {
             let teacher = teachers[teacherID];
             if (!teacher)
                 throw "Could not find teacher " + teacherID;
 
-            let entry = teacher.firstName + " " + teacher.lastName + " (";
-            if (teacher.isStudentAssistant)
-                entry += "assistant, ";
-            entry += course.teachingCoveredPercent[teacherID] + "%)";
-
-            teacherEntries.push(entry);
+            coveringTeachers.push(teacher);
         }
 
         let remarks = [];
 
-        if (teacherEntries.length > 0) {
+        if (coveringTeachers.length > 0) {
             let coverageCell = listBrowser.createDetail("Teachers");
             let list = createElement("ul", coverageCell);
 
-            for (let entryI in teacherEntries) {
-                let entry = teacherEntries[entryI];
+            for (let teacherIndex in coveringTeachers) {
+                let teacher = coveringTeachers[teacherIndex];
+                let entry = teacher.firstName + " " + teacher.lastName + " (";
+                if (teacher.isStudentAssistant)
+                    entry += "assistant, ";
+                entry += course.teachingCoveredPercent[teacher.id] + "%)";
+
                 let item = createElement("li", list);
                 let link = createElement("a", item, {
                     href: "#",

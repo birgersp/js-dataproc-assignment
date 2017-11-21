@@ -8,6 +8,8 @@ function TMListBrowser() {
     let detailsContainer = null;
     let detailsTableBody = null;
 
+    let tableBodyRow = null;
+
     this.container = null;
     this.itemSelected = function(id) {};
 
@@ -41,15 +43,26 @@ function TMListBrowser() {
         listTableBody = createElement("tbody", table);
     };
 
-    this.addListItem = function(id, values) {
+    this.addListRow = function(id) {
 
-        let tableBodyRow = createElement("tr", listTableBody, {"class": "clickable"});
+        tableBodyRow = createElement("tr", listTableBody, {"class": "clickable"});
         tableBodyRow.addEventListener("click", () => {
             self.itemSelected(id);
         });
+    };
 
+    this.addListValue = function(value, markRed) {
+        let cell = createElement("td", tableBodyRow, {innerHTML: value});
+        if (markRed === true) {
+            cell.setAttribute("style", "color:red");
+        }
+    };
+
+    this.addListItem = function(id, values) {
+
+        self.addListRow(id);
         for (let key in values)
-            createElement("td", tableBodyRow, {innerHTML: values[key]});
+            self.addListValue(values[key]);
     };
 
     this.clearDetails = function() {
