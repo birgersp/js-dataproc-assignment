@@ -80,20 +80,18 @@ function TMNotificationBrowser() {
                 if (teacher.isExternal || teacher.isStudentAssistant)
                     return;
 
-                let workloadPercentage = Math.round(teacher.workloadNormalized[season] * 100);
-
-                if (workloadPercentage > self.teacherValidator.maximumWorkloadPercent) {
-                    let notification = name + " has a high workload during the " + season + " semester: " + workloadPercentage + "%";
+                if (!self.teacherValidator.hasWorkloadBelowThreshold(teacher, season)) {
+                    let notification = name + " has a high workload during the " + season + " semester: " + Math.round(teacher.workloadNormalized[season] * 100) + "%";
                     addTeacherNotification(teacher, notification);
                 }
 
-                if (workloadPercentage < self.teacherValidator.minimumWorkloadPercent) {
-                    let notification = name + " has a low workload during the " + season + " semester: " + workloadPercentage + "%";
+                if (!self.teacherValidator.hasWorkloadAboveThreshold(teacher, season)) {
+                    let notification = name + " has a low workload during the " + season + " semester: " + Math.round(teacher.workloadNormalized[season] * 100) + "%";
                     addTeacherNotification(teacher, notification);
                 }
             }
-            checkWorkload("spring");
-            checkWorkload("fall");
+            checkWorkload(TMCourse.Season.SPRING);
+            checkWorkload(TMCourse.Season.FALL);
         }
     };
 
