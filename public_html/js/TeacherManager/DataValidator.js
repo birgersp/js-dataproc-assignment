@@ -24,7 +24,7 @@ function TMDataValidator() {
 
     };
 
-    this.validate = function(teacher) {
+    this.validateTeacher = function(teacher) {
 
         if (teacher.isExternal || teacher.isStudentAssistant)
             return true;

@@ -116,7 +116,7 @@ function TMWorkloadBrowser() {
             activeTeachers.push(teacher);
 
             let teacherName = teacher.lastName + ", " + teacher.firstName[0];
-            let mark = self.teacherValidator.validate(teacher) ? "" : " (!)";
+            let mark = self.teacherValidator.validateTeacher(teacher) ? "" : " (!)";
 
             workloadChart.data.labels.push(teacherName + mark);
 
