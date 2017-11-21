@@ -65,7 +65,7 @@ function TMApp() {
 
         // TODO: remove this
         setTimeout(() => {
-            selectCourse(getIndexedAttribute(courses, 0));
+            tabs.teachers.open();
         }, 0);
     }
 
