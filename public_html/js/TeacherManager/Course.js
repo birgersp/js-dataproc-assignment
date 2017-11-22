@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Creates a course instance
+ * @returns {TMCourse}
+ */
 function TMCourse() {
 
     // ID
@@ -30,6 +34,9 @@ function TMCourse() {
     this.teachingCoveredPercent = {};
 }
 
+/**
+ * Defines two different season that a course can be held
+ */
 TMCourse.Season = {
     SPRING: "spring",
     FALL: "fall"

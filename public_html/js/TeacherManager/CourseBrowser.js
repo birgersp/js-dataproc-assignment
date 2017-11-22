@@ -2,6 +2,10 @@
 
 include("ListBrowser.js");
 
+/**
+ * Creates a list of courses, where a course may be selected to show its details
+ * @returns {TMCourseBrowser}
+ */
 function TMCourseBrowser() {
 
     let self = this;
@@ -28,6 +32,9 @@ function TMCourseBrowser() {
     /** @type {TMDataValidator} */
     this.dataValidator = null;
 
+    /**
+     * Creates adds a single list (which will contain courses) with course attribute keys
+     */
     this.initialize = function() {
 
         let attributeHeaders = [];
@@ -45,6 +52,10 @@ function TMCourseBrowser() {
         listBrowser.addList(null, attributeHeaders);
     };
 
+    /**
+     * Sorts courses and adds them to the list
+     * @param {Object} newCourses
+     */
     this.addCourses = function(newCourses) {
 
         let sortedCourses = [];
@@ -93,6 +104,10 @@ function TMCourseBrowser() {
         }
     };
 
+    /**
+     * Adds data about teachers
+     * @param {Object} newTeachers
+     */
     this.addTeachers = function(newTeachers) {
 
         for (let teacherID in newTeachers) {
@@ -100,6 +115,13 @@ function TMCourseBrowser() {
         }
     };
 
+    /**
+     * Modifies the view to show details of a single course
+     * Lists all the typical attributes of the course, including:
+     * - Teachers covering the course
+     * - Remarks (checks if the course is valid, shows info if its not)
+     * @param {TMCourse} course
+     */
     this.showCourseDetails = function(course) {
 
         listBrowser.clearDetails();
@@ -169,6 +191,9 @@ function TMCourseBrowser() {
         listBrowser.enableDetailView();
     };
 
+    /**
+     * Shows the list of courses (hides details if shown)
+     */
     this.resetView = function() {
 
         listBrowser.disableDetailView();

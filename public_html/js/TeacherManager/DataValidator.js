@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Creates an instance to validate teachers and courses
+ * @returns {TMDataValidator}
+ */
 function TMDataValidator() {
 
     let self = this;
@@ -7,6 +11,11 @@ function TMDataValidator() {
     this.minimumWorkloadPercent = 25;
     this.maximumWorkloadPercent = 100;
 
+    /**
+     * Returns a value (percentage) indicating how much of a course is covered by teachers
+     * @param {TMCourse} course
+     * @returns {Number}
+     */
     this.getCourseCoverage = function(course) {
 
         let coverage = 0;
@@ -15,6 +24,12 @@ function TMDataValidator() {
         return coverage;
     };
 
+    /**
+     * Validates whether the workload of a teacher for a specific season is above a minimum threshold
+     * @param {TMTeacher} teacher
+     * @param {TMCourse.Season} season
+     * @returns {Boolean}
+     */
     this.teacherHasWorkloadAboveThreshold = function(teacher, season) {
 
         if ((!teacher.isExternal) && (!teacher.isStudentAssistant))
@@ -24,6 +39,12 @@ function TMDataValidator() {
         return true;
     };
 
+    /**
+     * Validates whether the workload of a teacher for a specific season is below a maximum threshold
+     * @param {type} teacher
+     * @param {type} season
+     * @returns {Boolean}
+     */
     this.teacherHasWorkloadBelowThreshold = function(teacher, season) {
 
         if ((!teacher.isExternal) && (!teacher.isStudentAssistant))
@@ -34,6 +55,11 @@ function TMDataValidator() {
 
     };
 
+    /**
+     * Performs a number of checks on a teacher object to validate it
+     * @param {TMTeacher} teacher
+     * @returns {Boolean}
+     */
     this.validateTeacher = function(teacher) {
 
         if (teacher.isExternal || teacher.isStudentAssistant)
@@ -54,16 +80,31 @@ function TMDataValidator() {
         return true;
     };
 
+    /**
+     * Validates whether a course is covered above a minimum threshold (0%)
+     * @param {type} course
+     * @returns {Boolean}
+     */
     this.courseCoverageAboveThreshold = function(course) {
 
         return self.getCourseCoverage(course) > 0;
     };
 
+    /**
+     * Validates whether a course is covered below a maximum threshold (100%)
+     * @param {TMCourse} course
+     * @returns {Boolean}
+     */
     this.courseCoverageBelowThreshold = function(course) {
 
         return self.getCourseCoverage(course) == 100;
     };
 
+    /**
+     * Performs multiple checks to validate a course
+     * @param {TMCourse} course
+     * @returns {Boolean}
+     */
     this.validateCourseCoverage = function(course) {
 
         if (!self.courseCoverageAboveThreshold(course))

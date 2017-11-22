@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Defines a teacher
+ * @returns {TMTeacher}
+ */
 function TMTeacher() {
 
     this.id = null;

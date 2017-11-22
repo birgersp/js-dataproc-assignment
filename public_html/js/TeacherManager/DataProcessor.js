@@ -2,6 +2,10 @@
 
 include("../utilities/utilities.js");
 
+/**
+ * Creates an instance to load and process information about courses and teachers
+ * @returns {TMDataProcessor}
+ */
 function TMDataProcessor() {
 
     let studyPrograms = {};
@@ -13,6 +17,10 @@ function TMDataProcessor() {
         fall: 0
     };
 
+    /**
+     * Iterates through samples and adds unique courses and teachers to the data processor
+     * @param {Object[]} samples
+     */
     function populate(samples) {
 
         // Iterate through samples, identify unique programs, courses and teachers
@@ -87,6 +95,10 @@ function TMDataProcessor() {
         }
     }
 
+    /**
+     * Iterates through samples to compute the workload of each teacher
+     * @param {Object[]} samples
+     */
     function addTeacherWorkload(samples) {
 
         // Iterate through samples, identify unique programs, courses and teachers
@@ -126,6 +138,9 @@ function TMDataProcessor() {
         }
     }
 
+    /**
+     * Iterates through the teachers, to compute the normalized workload of each
+     */
     function setTeacherWorkloadNormalized() {
 
         for (let teacherID in teachers) {
@@ -148,12 +163,22 @@ function TMDataProcessor() {
         }
     }
 
+    /**
+     * Adds information about teachers and courses from an array of samples
+     * @param {Object[]} samples
+     */
     function loadCoursesDataset(samples) {
         populate(samples);
         addTeacherWorkload(samples);
         setTeacherWorkloadNormalized();
     }
 
+    /**
+     * Loads a dataset containing information about courses, invokes a callback when the data is loaded
+     * Expects the file to be a character-separated-values (.csv), where entries are separated by a carriage-return (\r) while values are separated by a semicolon (;)
+     * @param {String} filename
+     * @param {Function} callback
+     */
     this.loadCoursesDataset = function(filename, callback) {
         requestURL(filename, function(csvString) {
             let samples = parseCSVString(csvString, "\r", ";");
@@ -162,6 +187,12 @@ function TMDataProcessor() {
         });
     };
 
+    /**
+     * Loads a dataset containing information about hours per semester, invokes a callback when the data is loaded
+     * Expects the file to be a character-separated-values (.csv), where entries are separated by a carriage-return (\r) while values are separated by a semicolon (;)
+     * @param {String} filename
+     * @param {Function} callback
+     */
     this.loadSemesterHours = function(filename, callback) {
         requestURL(filename, (string) => {
             let samples = parseCSVString(string, "\r", ";");
@@ -182,14 +213,26 @@ function TMDataProcessor() {
         });
     };
 
+    /**
+     * Returns an object where each attribute is a study program (the attribute key is the ID of the program)
+     * @returns {Object}
+     */
     this.getStudyPrograms = function() {
         return studyPrograms;
     };
 
+    /**
+     * Returns an object where each attribute is a course (attribute key is course ID)
+     * @returns {Object}
+     */
     this.getCourses = function() {
         return courses;
     };
 
+    /**
+     * Returns an object where each attribute is a teacher (attribute key is teacher ID)
+     * @returns {Object}
+     */
     this.getTeachers = function() {
         return teachers;
     };

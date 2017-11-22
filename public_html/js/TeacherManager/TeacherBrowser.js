@@ -2,6 +2,10 @@
 
 include("ListBrowser.js");
 
+/**
+ * Manages a list of teachers which can be browsed
+ * @returns {TMTeacherBrowser}
+ */
 function TMTeacherBrowser() {
 
     let self = this;
@@ -20,6 +24,9 @@ function TMTeacherBrowser() {
 
     this.container = null;
 
+    /**
+     * Callback which is invoked when a course is selected
+     */
     this.onCourseSelected = function(course) {};
 
     /** @type {TMDataValidator} */
@@ -36,6 +43,10 @@ function TMTeacherBrowser() {
         };
     };
 
+    /**
+     * Adds teachers to the list
+     * @param {Object} newTeachers
+     */
     this.addTeachers = function(newTeachers) {
 
         let attributeHeaders = [];
@@ -94,6 +105,10 @@ function TMTeacherBrowser() {
         addTeachers("External Teachers", externalTeachers);
     };
 
+    /**
+     * Shows details of a single teacher
+     * @param {TMTeacher} teacher
+     */
     this.showTeacherDetails = function(teacher) {
 
         listBrowser.clearDetails();
@@ -178,6 +193,9 @@ function TMTeacherBrowser() {
         listBrowser.enableDetailView();
     };
 
+    /**
+     * Shows the list of teachers (hides details if shown)
+     */
     this.resetView = function() {
 
         listBrowser.disableDetailView();

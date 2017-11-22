@@ -5,6 +5,10 @@ include("../thirdparty/bootstrap.min.js");
 
 include("Tab.js");
 
+/**
+ * Creates a user interface
+ * @returns {TMUserInterface}
+ */
 function TMUserInterface() {
 
     let ui = this;
@@ -16,6 +20,9 @@ function TMUserInterface() {
     let navBarList = null;
     let navBarContentContainer = null;
 
+    /**
+     * Loads (initializes) bootstrap's cascading style sheet (CSS)
+     */
     function loadBootstrapCSS() {
 
         let bootstrapCSS = createElement("link", document.head);
@@ -23,6 +30,9 @@ function TMUserInterface() {
         bootstrapCSS.setAttribute("href", "css/bootstrap.min.css");
     }
 
+    /**
+     * Creates the DOM elements of the UI
+     */
     this.initialize = function() {
 
         if (initialized)

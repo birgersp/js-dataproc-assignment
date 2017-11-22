@@ -8,6 +8,11 @@ include("../utilities/vlineplugin.js");
 
 include("OptionsDropdown.js");
 
+/**
+ * Displays teacher workloads in a chart
+ * Teachers may be selected by clicking the chart
+ * @returns {TMWorkloadBrowser}
+ */
 function TMWorkloadBrowser() {
 
     const COLOR_ALPHA = 0.2;
@@ -27,6 +32,8 @@ function TMWorkloadBrowser() {
 
     const MEAN_LINE_BODER_COLOR = "rgba(255,0,0,1)";
     const FULL_LINE_BODER_COLOR = "rgba(0,0,255,1)";
+
+    const CHART_TITLE = "Workload Hours";
 
     let self = this;
 
@@ -60,6 +67,11 @@ function TMWorkloadBrowser() {
     let verticalLines = [meanWorkloadLine, fullWorkloadLine];
 
     this.container = null;
+
+    /**
+     * Callback which is invoked when a teacher is selected (by clicking the chart)
+     * @param {TMTeacher} teacher
+     */
     this.onTeacherSelected = function(teacher) {};
 
     /** @type TMDataValidator */
@@ -81,6 +93,11 @@ function TMWorkloadBrowser() {
         return value + "%";
     };
 
+    /**
+     * Invoked when the chart is clicked
+     * @param {MouseEvent} event
+     * @param {Object[]} array
+     */
     function onChartClicked(event, array) {
 
         let activeTooltip = workloadChart.tooltip._active[0];
@@ -90,6 +107,9 @@ function TMWorkloadBrowser() {
         }
     }
 
+    /**
+     * Updates the workload browser, modifies the chart according to current settings
+     */
     function update() {
 
         activeTeachers = [];
@@ -163,6 +183,9 @@ function TMWorkloadBrowser() {
         fullWorkloadLine.enabled = options.normalize;
     }
 
+    /**
+     * Creates the options dropdown menu and the chart
+     */
     this.initialize = function() {
 
         let dropdownContainer = createElement("div", self.container);
@@ -180,8 +203,84 @@ function TMWorkloadBrowser() {
         dropdown.addOption("normalize", "Normalize");
 
         warningHeader = createElement("h4", self.container, {innerHTML: "Loading workload data..."});
+
+        let canvasContainer = createElement("div", self.container);
+        canvasContainer.style.setProperty("max-width", CHART_MAX_WIDTH + "px");
+        canvasContainer.style.setProperty("margin", "0px");
+        canvasContainer.style.setProperty("padding", "0px");
+        let chartCanvas = createElement("canvas", canvasContainer);
+
+        workloadChart = new Chart(chartCanvas, {
+            type: 'horizontalBar',
+            data: {
+                labels: ["Unnamed"],
+                datasets: [
+                    {
+                        data: [75],
+                        backgroundColor: SPRING_COLOR,
+                        borderColor: SPRING_BORDER_COLOR,
+                        borderWidth: 1,
+                        label: "Spring"
+                    },
+                    {
+                        data: [50],
+                        backgroundColor: FALL_COLOR,
+                        borderColor: FALL_BORDER_COLOR,
+                        borderWidth: 1,
+                        label: "Fall"
+                    }]
+            },
+            options: {
+                onClick: onChartClicked,
+                scales: {
+                    xAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                max: 1000,
+                                callback: function(value, index, values) {
+                                    if (options.normalize)
+                                        return normalizedLabelCallback(value);
+                                    else
+                                        return defaultLabelCallback(value);
+                                }
+                            }
+                        }]
+                },
+                title: {
+                    display: true,
+                    text: CHART_TITLE
+                },
+                tooltips: {
+                    intersect: false,
+                    mode: 'y',
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+
+                            let label = data.labels[tooltipItem.index];
+
+                            if (tooltipItem.datasetIndex == 0)
+                                label += " (spring)";
+                            else
+                                label += " (fall)";
+
+                            let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                            if (options.normalize)
+                                return normalizedTooltipCallback(label, value);
+                            else
+                                return defaultTooltipCallback(label, value);
+                        }
+                    }
+                },
+                maintainAspectRatio: false
+            },
+            verticalLines: verticalLines
+        });
     };
 
+    /**
+     * Sets teacher data, sorts the teachers alphabetically, updates the chart
+     * @param {type} teachers
+     */
     this.setTeacherData = function(teachers) {
 
         for (let teacherID in teachers) {
@@ -206,91 +305,6 @@ function TMWorkloadBrowser() {
         }
 
         warningHeader.parentNode.removeChild(warningHeader);
-
-        function createChartContainedCanvas() {
-
-            let container = createElement("div", self.container);
-            container.style.setProperty("max-width", CHART_MAX_WIDTH + "px");
-            container.style.setProperty("margin", "0px");
-            container.style.setProperty("padding", "0px");
-            let canvas = createElement("canvas", container);
-            return canvas;
-        }
-
-        let chartCanvas = createChartContainedCanvas();
-
-        function createChart(canvas, title, onChartClicked) {
-
-            let chart = new Chart(canvas, {
-                type: 'horizontalBar',
-                data: {
-                    labels: [],
-                    datasets: []
-                },
-                options: {
-                    onClick: onChartClicked,
-                    scales: {
-                        xAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    max: 0,
-                                    callback: function(value, index, values) {
-                                        if (options.normalize)
-                                            return normalizedLabelCallback(value);
-                                        else
-                                            return defaultLabelCallback(value);
-                                    }
-                                }
-                            }]
-                    },
-                    title: {
-                        display: true,
-                        text: title
-                    },
-                    tooltips: {
-                        intersect: false,
-                        mode: 'y',
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-
-                                let label = data.labels[tooltipItem.index];
-
-                                if (tooltipItem.datasetIndex == 0)
-                                    label += " (spring)";
-                                else
-                                    label += " (fall)";
-
-                                let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                if (options.normalize)
-                                    return normalizedTooltipCallback(label, value);
-                                else
-                                    return defaultTooltipCallback(label, value);
-                            }
-                        }
-                    },
-                    maintainAspectRatio: false
-                },
-                verticalLines: verticalLines
-            });
-
-            return chart;
-        }
-
-        workloadChart = createChart(chartCanvas, "Workload Hours", onChartClicked);
-        workloadChart.data.datasets.push({
-            data: [],
-            backgroundColor: SPRING_COLOR,
-            borderColor: SPRING_BORDER_COLOR,
-            borderWidth: 1,
-            label: "Spring"
-        });
-        workloadChart.data.datasets.push({
-            data: [],
-            backgroundColor: FALL_COLOR,
-            borderColor: FALL_BORDER_COLOR,
-            borderWidth: 1,
-            label: "Fall"
-        });
         update();
     };
 }

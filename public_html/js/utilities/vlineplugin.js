@@ -1,5 +1,6 @@
 /**
  * (Depends on Chart.js being pre-loaded)
+ * Adds a Chart.js plugin to draw vertical lines in a chart
  */
 
 "use strict";

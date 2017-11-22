@@ -2,6 +2,11 @@
 
 include("../utilities/utilities.js");
 
+/**
+ * Creates a dropdown-menu of options
+ * @param {Element} container A DOM element which shall contain the dropdown menu
+ * @returns {TMOptionsDropdown}
+ */
 function TMOptionsDropdown(container) {
 
     let self = this;
@@ -9,8 +14,12 @@ function TMOptionsDropdown(container) {
     this.options = {};
     let dropdownList = null;
 
+    /**
+     * Callback which is invoked when options have changed
+     */
     this.onChange = function() {};
 
+    // Initialization, creates necessary DOM elements
     {
         if (!container)
             container = document.body;
@@ -42,7 +51,14 @@ function TMOptionsDropdown(container) {
         });
     }
 
-    this.addOption = function(optionID, label) {
+    /**
+     * Adds a checkable option to the dropdown menu
+     * Attempts to find the option matching the target key in the options member
+     * If the option is not found, it is created (default value is false)
+     * @param {String} targetKey
+     * @param {String} label
+     */
+    this.addOption = function(targetKey, label) {
 
         let listItem = createElement("li", dropdownList);
         let link = createElement("a", listItem, {
@@ -61,21 +77,22 @@ function TMOptionsDropdown(container) {
 
             let element = document.getElementById(checkboxID);
             element.checked = !element.checked;
-            self.options[optionID] = element.checked;
+            self.options[targetKey] = element.checked;
         };
 
         link.onclick = function(e) {
 
+            // This prevents the webpage from closing the dropdown when an option is clicked
             e.stopPropagation();
             toggle();
             self.onChange();
         };
         link.innerHTML += " " + label;
 
-        if (self.options[optionID] == undefined)
-            self.options[optionID] = false;
+        if (self.options[targetKey] == undefined)
+            self.options[targetKey] = false;
         else
-            document.getElementById(checkboxID).checked = self.options[optionID];
+            document.getElementById(checkboxID).checked = self.options[targetKey];
 
         TMOptionsDropdown.checkboxes++;
     };

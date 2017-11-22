@@ -12,6 +12,11 @@ include("NotificationBrowser.js");
 include("CourseBrowser.js");
 include("DataValidator.js");
 
+/**
+ * Creates an App instance
+ * This is the top-level class of the web-application
+ * @returns {TMApp}
+ */
 function TMApp() {
 
     const APP_TITLE = "Teacher Manager";
@@ -27,8 +32,6 @@ function TMApp() {
 
     const NOTIFICATIONS_TAB_ID = "info";
     const NOTIFICATIONS_TAB_LABEL = "Info";
-
-    const DEFAULT_ACTIVE_TAB = TEACHERS_TAB_ID;
 
     let self = this;
 
@@ -48,6 +51,9 @@ function TMApp() {
         info: null
     };
 
+    /**
+     * Invoke when data has been processed (use as data processor callback)
+     */
     function dataProcessed() {
 
         let teachers = self.dataProcessor.getTeachers();
@@ -64,18 +70,32 @@ function TMApp() {
         self.notificationsBrowser.processCourses(courses);
     }
 
+    /**
+     * Opens the teacher browser tab and shows details of a specific teacher
+     * @param {TMTeacher} teacher
+     */
     function selectTeacher(teacher) {
 
         tabs.teachers.open();
         self.teacherBrowser.showTeacherDetails(teacher);
     }
 
+    /**
+     * Opens the course browser tab and shows details of a specific course
+     * @param {TMCourse} course
+     */
     function selectCourse(course) {
 
         tabs.courses.open();
         self.courseBrowser.showCourseDetails(course);
     }
 
+    /**
+     * Initializes the application
+     * - Creates the UI
+     * - Initializes the workload, teacher, courses and info browsers
+     * - Loads the .csv data
+     */
     this.start = function() {
 
         self.ui.appTitle = APP_TITLE;
@@ -116,6 +136,7 @@ function TMApp() {
         self.notificationsBrowser.dataValidator = dataValidator;
         self.notificationsBrowser.initialize();
 
+        // Load .csv data
         self.dataProcessor.loadSemesterHours("data/hours.csv", () => {
             self.dataProcessor.loadCoursesDataset("data/courses.csv", dataProcessed);
         });
