@@ -1,3 +1,5 @@
+"use strict";
+
 function TMDataValidator() {
 
     let self = this;

@@ -1,3 +1,5 @@
+"use strict";
+
 include("ListBrowser.js");
 
 function TMCourseBrowser() {

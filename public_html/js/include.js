@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Adds a single file to be included.
  * @param {String} path A relative path to a script.
